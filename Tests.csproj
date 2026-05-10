@@ -866,6 +866,10 @@
       <Project>{319bbd35-71e4-dce4-33fa-61ac264d4e17}</Project>
       <Name>UnityEditor.TestRunner</Name>
     </ProjectReference>
+    <ProjectReference Include="RubiksCube.Runtime.csproj">
+      <Project>{f326e9ba-95b2-25f3-094d-fd8b57180aa0}</Project>
+      <Name>RubiksCube.Runtime</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{8ff2f994-4048-c38a-be36-67ffb810216a}</Project>
       <Name>UnityEditor.UI</Name>
