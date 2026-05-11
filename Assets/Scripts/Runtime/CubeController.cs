@@ -16,7 +16,7 @@ public class CubeController : MonoBehaviour
         _cubieBounds = cubiePrefab.GetComponent<MeshFilter>().sharedMesh.bounds;
         SpawnCubies();
         RotateLayer(CubeLayer.L, 90);
-        RotateLayer(CubeLayer.F, 45);
+        // RotateLayer(CubeLayer.F, 90);
     }
 
     // Update is called once per frame
@@ -53,6 +53,8 @@ public class CubeController : MonoBehaviour
     private void RotateLayer(CubeLayer layer, float degrees)
     {
         int xStart = 0, xStop = _cubeSize - 1, yStart = 0, yStop = _cubeSize - 1, zStart = 0, zStop = _cubeSize - 1;
+
+        Transform[,,] cubiesCopy = (Transform[,,])_cubies.Clone();
         
         switch (layer)
         {
@@ -90,6 +92,15 @@ public class CubeController : MonoBehaviour
         }
         
     }
+
+    // Rotates the indices of a layer by 90 degrees around primary axes
+    private void RotateLayerIndices(CubeLayer layer, bool clockWise)q
+    {
+        
+        
+    }
+
+  
 }
 
 enum CubeLayer
@@ -98,9 +109,9 @@ enum CubeLayer
     X,
     R,
     D,
-    Y,
+    Z,
     U,
     F,
-    Z,
+    Y,
     B
 }

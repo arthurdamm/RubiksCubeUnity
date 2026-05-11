@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Runtime/CubeController.cs" />
+    <Compile Include="Assets/Scripts/Runtime/Rotations.cs" />
     <Compile Include="Assets/Scripts/Runtime/Debug/Logger.cs" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/6000.3.8f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/Variations/mono/Managed/UnityEngine.dll</HintPath>
