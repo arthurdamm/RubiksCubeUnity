@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Runtime/CubeController.cs" />
+    <Compile Include="Assets/Scripts/Runtime/CubieGridMapper.cs" />
     <Compile Include="Assets/Scripts/Runtime/Rotations.cs" />
     <Compile Include="Assets/Scripts/Runtime/Debug/Logger.cs" />
     <Reference Include="UnityEngine">

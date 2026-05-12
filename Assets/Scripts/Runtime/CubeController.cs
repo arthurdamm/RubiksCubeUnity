@@ -5,17 +5,23 @@ public class CubeController : MonoBehaviour
 {
     [SerializeField] private GameObject cubiePrefab;
 
-    private int _cubeSize = 3;
-    private Bounds _cubieBounds;
-    private float _cubiePadding = 0.01f;
+    [SerializeField] private int _cubeSize = 3;
+    [SerializeField] private Bounds _cubieBounds;
+    [SerializeField] private float _cubiePadding = 0.5f;
+
+    private CubieGridMapper _cubieGridMapper;
     
     private Transform[,,] _cubies;
     
     void Start()
     {
         _cubieBounds = cubiePrefab.GetComponent<MeshFilter>().sharedMesh.bounds;
+        Logger.LogFields(new {_cubieBounds.center, _cubieBounds.size});
+
+        _cubieGridMapper = new CubieGridMapper(_cubeSize, _cubiePadding, _cubieBounds);
         SpawnCubies();
-        RotateLayer(CubeLayer.L, 90);
+        // RotateLayer(CubeLayer.L, 10);
+        // RotateLayer(CubeLayer.R, 10);
         // RotateLayer(CubeLayer.F, 90);
     }
 
@@ -35,10 +41,7 @@ public class CubeController : MonoBehaviour
             {
                 for (int z = 0; z < _cubeSize; z++)
                 {
-                    Vector3 spawnPosition = new Vector3(
-                        x * (_cubieBounds.size.x + _cubiePadding),
-                        y * (_cubieBounds.size.y + _cubiePadding),
-                        z * (_cubieBounds.size.z + _cubiePadding));
+                    Vector3 spawnPosition = _cubieGridMapper.GridIndexToLocalPosition(new Vector3Int(x, y, z));
                     Debug.Log(spawnPosition);
                     spawnPosition += transform.position;
                     GameObject cubieGo = Instantiate(cubiePrefab, spawnPosition, Quaternion.identity, transform);
@@ -62,10 +65,10 @@ public class CubeController : MonoBehaviour
             case CubeLayer.X: xStart = xStop = 1; break;
             case CubeLayer.R: xStart = xStop = 2; break;
             case CubeLayer.D: yStart = yStop = 0; break;
-            case CubeLayer.Y: yStart = yStop = 1; break;
+            case CubeLayer.Z: yStart = yStop = 1; break;
             case CubeLayer.U: yStart = yStop = 2; break;
             case CubeLayer.F: zStart = zStop = 0; break;
-            case CubeLayer.Z: zStart = zStop = 1; break;
+            case CubeLayer.Y: zStart = zStop = 1; break;
             case CubeLayer.B: zStart = zStop = 2; break;
         }
 
@@ -87,6 +90,7 @@ public class CubeController : MonoBehaviour
                 for (int z = zStart; z <= zStop; z++)
                 {
                     _cubies[x, y, z].RotateAround(center, axis, degrees);
+                    
                 }
             }
         }
@@ -94,7 +98,7 @@ public class CubeController : MonoBehaviour
     }
 
     // Rotates the indices of a layer by 90 degrees around primary axes
-    private void RotateLayerIndices(CubeLayer layer, bool clockWise)q
+    private void RotateLayerIndices(CubeLayer layer, bool clockWise)
     {
         
         
