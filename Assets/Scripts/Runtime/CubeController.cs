@@ -15,9 +15,12 @@ public class CubeController : MonoBehaviour
     
     private Transform[,,] _cubies;
 
+
     private CubeLayer _layerToRotate;
-    private float _degreesToRotate = 0f;
+    private float _degreesToRotateRemaining = 0f;
+    
     public bool _isRotating = false;
+    
     private Queue<(CubeLayer, float)> _rotationQueue = new();
     
     void Start()
@@ -27,31 +30,24 @@ public class CubeController : MonoBehaviour
 
         _cubieGridMapper = new CubieGridMapper(_cubeSize, _cubiePadding, _cubieBounds);
         SpawnCubies();
-        // RotateLayer(CubeLayer.L, 10);
-        // RotateLayer(CubeLayer.R, 10);
         
-        // QueueRotateLayer(CubeLayer.L, 90);
-        // QueueRotateLayer(CubeLayer.X, 90);
-        // QueueRotateLayer(CubeLayer.R, 90);
         QueueRotateLayer(CubeLayer.R, 90);
         QueueRotateLayer(CubeLayer.U, 90);
         QueueRotateLayer(CubeLayer.R, -90);
         QueueRotateLayer(CubeLayer.U, -90);
-        //
-        // QueueRotateLayer(CubeLayer.F, 90);
-        // QueueRotateLayer(CubeLayer.Y, 90);
-        // QueueRotateLayer(CubeLayer.B, 90);
-        //
-        // QueueRotateLayer(CubeLayer.D, 90);
-        // QueueRotateLayer(CubeLayer.Z, 90);
-        // QueueRotateLayer(CubeLayer.U, 90);
-        
-        // RotateLayer(CubeLayer.U, 90);
-        // RotateLayer(CubeLayer.R, -90);
-        // RotateLayer(CubeLayer.U, -90);
     }
 
-
+    // QueueRotateLayer(CubeLayer.L, 90);
+    // QueueRotateLayer(CubeLayer.X, 90);
+    // QueueRotateLayer(CubeLayer.R, 90);
+    //
+    // QueueRotateLayer(CubeLayer.F, 90);
+    // QueueRotateLayer(CubeLayer.Y, 90);
+    // QueueRotateLayer(CubeLayer.B, 90);
+    //
+    // QueueRotateLayer(CubeLayer.D, 90);
+    // QueueRotateLayer(CubeLayer.Z, 90);
+    // QueueRotateLayer(CubeLayer.U, 90);
 
     private void SpawnCubies()
     {
@@ -69,7 +65,6 @@ public class CubeController : MonoBehaviour
                     GameObject cubieGo = Instantiate(cubiePrefab, spawnPosition, Quaternion.identity, transform);
                     cubieGo.name = $"Cubie ({x}, {y}, {z})";
                     _cubies[x, y, z] = cubieGo.transform;
-                    
                 }
             }
         }
@@ -84,7 +79,7 @@ public class CubeController : MonoBehaviour
         }
         else if (_rotationQueue.Count > 0)
         {
-            (_layerToRotate, _degreesToRotate) = _rotationQueue.Dequeue();
+            (_layerToRotate, _degreesToRotateRemaining) = _rotationQueue.Dequeue();
             _isRotating = true;
         }
     }
@@ -92,24 +87,22 @@ public class CubeController : MonoBehaviour
     private void QueueRotateLayer(CubeLayer layer, float degrees)
     {
         _rotationQueue.Enqueue((layer, degrees));
-        // _layerToRotate = layer;
-        // _degreesToRotate = degrees;
-        // _isRotating = true;
     }
 
     private void AnimateRotateLayer()
     {
-        if (_degreesToRotate < 1e-3)
+        if (Mathf.Abs(_degreesToRotateRemaining) < 1e-6)
         {
-            _degreesToRotate = 0f;
+            _degreesToRotateRemaining = 0f;
             _isRotating = false;
-            RemapGridIndices(_layerToRotate);
+            RemapGridIndicesFromTransformPosition(_layerToRotate);
             return;
         }
 
-        float degreesToRotateNow = Mathf.Min(_degreesToRotate, Time.deltaTime * rotationDegreesPerSecond);
+        float degreesToRotateNow = Mathf.Min(Mathf.Abs(_degreesToRotateRemaining), Time.deltaTime * rotationDegreesPerSecond);
+        degreesToRotateNow *= Mathf.Sign(_degreesToRotateRemaining);
         RotateLayer(_layerToRotate, degreesToRotateNow);
-        _degreesToRotate -= degreesToRotateNow;
+        _degreesToRotateRemaining -= degreesToRotateNow;
     }
 
     private void RotateLayer(CubeLayer layer, float degrees)
@@ -159,7 +152,7 @@ public class CubeController : MonoBehaviour
 
     }
 
-    private void RemapGridIndices(CubeLayer layer)
+    private void RemapGridIndicesFromTransformPosition(CubeLayer layer)
     {
         int xStart = 0, xStop = _cubeSize - 1, yStart = 0, yStop = _cubeSize - 1, zStart = 0, zStop = _cubeSize - 1;
 
@@ -198,8 +191,6 @@ public class CubeController : MonoBehaviour
     // Rotates the indices of a layer by 90 degrees around primary axes
     private void RotateLayerIndices(CubeLayer layer, bool clockWise)
     {
-        
-        
     }
 
   
