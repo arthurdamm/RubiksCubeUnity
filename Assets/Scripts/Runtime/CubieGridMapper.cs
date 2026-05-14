@@ -23,6 +23,7 @@ public class CubieGridMapper
 
     public Vector3Int LocalPositionToGridIndex(Vector3 point)
     {
+        Debug.Log($"LocalToIndex() cubeSize: {_cubeSize}, {_cubeSize / 2}");
         return new Vector3Int(
             Mathf.RoundToInt(point.x / (_cubieBounds.size.x + _cubiePadding) + _cubeSize / 2),
             Mathf.RoundToInt(point.z / (_cubieBounds.size.z + _cubiePadding) + _cubeSize / 2),
