@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class CubeController : MonoBehaviour
 {
@@ -22,6 +25,27 @@ public class CubeController : MonoBehaviour
     public bool _isRotating = false;
     
     private Queue<(CubeLayer, float)> _rotationQueue = new();
+
+    private InputAction _lookAction;
+    private InputAction _upAction;
+    private InputAction _downAction;
+    private InputAction _leftAction;
+    private InputAction _rightAction;
+    private InputAction _forwardAction;
+    private InputAction _backAction;
+    private InputAction _faceRotations;
+
+    private CubeActions _cubeActions;
+    private CubeActions.GameplayActions _gameplay;
+    private InputAction _counterClockwise;
+
+
+    void Awake()
+    {
+        _cubeActions = new();
+        _gameplay = _cubeActions.Gameplay;
+        _counterClockwise = _gameplay.CounterClockwise;
+    }
     
     void Start()
     {
@@ -30,24 +54,37 @@ public class CubeController : MonoBehaviour
 
         _cubieGridMapper = new CubieGridMapper(_cubeSize, _cubiePadding, _cubieBounds);
         SpawnCubies();
-        
-        QueueRotateLayer(CubeLayer.R, 90);
-        QueueRotateLayer(CubeLayer.U, 90);
-        QueueRotateLayer(CubeLayer.R, -90);
-        QueueRotateLayer(CubeLayer.U, -90);
+
+        TryDequeRotation();
     }
 
-    // QueueRotateLayer(CubeLayer.L, 90);
-    // QueueRotateLayer(CubeLayer.X, 90);
-    // QueueRotateLayer(CubeLayer.R, 90);
-    //
-    // QueueRotateLayer(CubeLayer.F, 90);
-    // QueueRotateLayer(CubeLayer.Y, 90);
-    // QueueRotateLayer(CubeLayer.B, 90);
-    //
-    // QueueRotateLayer(CubeLayer.D, 90);
-    // QueueRotateLayer(CubeLayer.Z, 90);
-    // QueueRotateLayer(CubeLayer.U, 90);
+    private void OnEnable()
+    {
+        _gameplay.Enable();
+        _gameplay.Up.performed += OnUpPerformed;
+        _gameplay.Down.performed += OnDownPerformed;
+        _gameplay.Left.performed += OnLeftPerformed;
+        _gameplay.Right.performed += OnRightPerformed;
+        _gameplay.Front.performed += OnFrontPerformed;
+        _gameplay.Back.performed += OnBackPerformed;
+    }
+    
+    private void OnDisable()
+    {
+        _gameplay.Up.performed -= OnUpPerformed;
+        _gameplay.Down.performed -= OnDownPerformed;
+        _gameplay.Left.performed -= OnLeftPerformed;
+        _gameplay.Right.performed -= OnRightPerformed;
+        _gameplay.Front.performed -= OnFrontPerformed;
+        _gameplay.Back.performed -= OnBackPerformed;
+        _gameplay.Disable();
+    }
+    
+    private void OnDestroy()
+    {
+        _cubeActions.Dispose();
+    }
+
 
     private void SpawnCubies()
     {
@@ -75,18 +112,68 @@ public class CubeController : MonoBehaviour
     {
         if (_isRotating)
         {
+            // Logger.LogOnce($"UPDATE {Time.time}");
+            // Debug.Log($"UPDATE {Time.time} {Time.deltaTime}");
+            
             AnimateRotateLayer();
         }
-        else if (_rotationQueue.Count > 0)
-        {
-            (_layerToRotate, _degreesToRotateRemaining) = _rotationQueue.Dequeue();
-            _isRotating = true;
-        }
+
     }
 
+    private void PerformFaceRotations(InputAction.CallbackContext ctx)
+    {
+        var inputValue = ctx.ReadValue<Vector3>();
+
+        if (inputValue == Vector3.zero) return;
+        
+        Debug.Log($"PerformFaceRotations() {inputValue} pressed: {_faceRotations.IsPressed()} performed: {ctx.performed} cancel: {ctx.canceled} {ctx.ToString()}");
+    }
+    private void OnUpPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log($"OnUpPerformed() {context}");
+        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        QueueRotateLayer(CubeLayer.U, 90 * signMultiplier);
+    }
+    
+    private void OnDownPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log($"OnDownPerformed() {context}");
+        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        QueueRotateLayer(CubeLayer.D, 90 * signMultiplier);
+    }
+
+    private void OnLeftPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log($"OnLeftPerformed() {context}");
+        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        QueueRotateLayer(CubeLayer.L, 90 * signMultiplier);
+    }
+
+    private void OnRightPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log($"OnRightPerformed() {context}");
+        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        QueueRotateLayer(CubeLayer.R, 90 * signMultiplier);
+    }
+
+    private void OnFrontPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log($"OnFrontPerformed() {context}");
+        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        QueueRotateLayer(CubeLayer.F, 90 * signMultiplier);
+    }
+
+    private void OnBackPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log($"OnBackPerformed() {context}");
+        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        QueueRotateLayer(CubeLayer.B, 90 * signMultiplier);
+    }
+    
     private void QueueRotateLayer(CubeLayer layer, float degrees)
     {
         _rotationQueue.Enqueue((layer, degrees));
+        TryDequeRotation();
     }
 
     private void AnimateRotateLayer()
@@ -96,6 +183,7 @@ public class CubeController : MonoBehaviour
             _degreesToRotateRemaining = 0f;
             _isRotating = false;
             RemapGridIndicesFromTransformPosition(_layerToRotate);
+            TryDequeRotation();
             return;
         }
 
@@ -105,26 +193,20 @@ public class CubeController : MonoBehaviour
         _degreesToRotateRemaining -= degreesToRotateNow;
     }
 
+    private void TryDequeRotation()
+    {
+        if (!_isRotating && _rotationQueue.Count > 0)
+        {
+            (_layerToRotate, _degreesToRotateRemaining) = _rotationQueue.Dequeue();
+            _isRotating = true;
+        }
+    }
+
     private void RotateLayer(CubeLayer layer, float degrees)
     {
-        int xStart = 0, xStop = _cubeSize - 1, yStart = 0, yStop = _cubeSize - 1, zStart = 0, zStop = _cubeSize - 1;
+        int xStart, xStop, yStart, yStop, zStart, zStop;
 
-        
-        
-        switch (layer)
-        {
-            case CubeLayer.L: xStart = xStop = 0; break;
-            case CubeLayer.X: xStart = xStop = 1; break;
-            case CubeLayer.R: xStart = xStop = 2; break;
-            
-            case CubeLayer.F: yStart = yStop = 0; break;
-            case CubeLayer.Y: yStart = yStop = 1; break;
-            case CubeLayer.B: yStart = yStop = 2; break;
-            
-            case CubeLayer.D: zStart = zStop = 0; break;
-            case CubeLayer.Z: zStart = zStop = 1; break;
-            case CubeLayer.U: zStart = zStop = 2; break;
-        }
+        (xStart, xStop, yStart, yStop, zStart, zStop) = _cubieGridMapper.GetStartStopForIteration(layer);
 
         Vector3 center = _cubies[(xStart + xStop) / 2, (yStart + yStop) / 2, (zStart + zStop) / 2].position;
         Vector3 axis = Vector3.up;
@@ -135,7 +217,6 @@ public class CubeController : MonoBehaviour
             case 1 : axis = Vector3.forward; break;
             case 2 : axis = Vector3.up; break;
         }
-        
 
         for (int x = xStart; x <= xStop; x++)
         {
@@ -144,34 +225,21 @@ public class CubeController : MonoBehaviour
                 for (int z = zStart; z <= zStop; z++)
                 {
                     _cubies[x, y, z].RotateAround(center, axis, degrees);
-                    
                 }
             }
         }
 
-
     }
-
+    
     private void RemapGridIndicesFromTransformPosition(CubeLayer layer)
     {
-        int xStart = 0, xStop = _cubeSize - 1, yStart = 0, yStop = _cubeSize - 1, zStart = 0, zStop = _cubeSize - 1;
+        int xStart, xStop, yStart, yStop, zStart, zStop;
+
+        (xStart, xStop, yStart, yStop, zStart, zStop) = _cubieGridMapper.GetStartStopForIteration(layer);
 
         Transform[,,] cubiesCopy = (Transform[,,])_cubies.Clone();
 
-        switch (layer)
-        {
-            case CubeLayer.L: xStart = xStop = 0; break;
-            case CubeLayer.X: xStart = xStop = 1; break;
-            case CubeLayer.R: xStart = xStop = 2; break;
-            
-            case CubeLayer.F: yStart = yStop = 0; break;
-            case CubeLayer.Y: yStart = yStop = 1; break;
-            case CubeLayer.B: yStart = yStop = 2; break;
-            
-            case CubeLayer.D: zStart = zStop = 0; break;
-            case CubeLayer.Z: zStart = zStop = 1; break;
-            case CubeLayer.U: zStart = zStop = 2; break;
-        }
+
 
         for (int x = xStart; x <= xStop; x++)
         {
@@ -180,7 +248,7 @@ public class CubeController : MonoBehaviour
                 for (int z = zStart; z <= zStop; z++)
                 {
                     Vector3Int point = _cubieGridMapper.LocalPositionToGridIndex(_cubies[x, y, z].localPosition);
-                    Debug.Log($"copying [{x},{y},{z}] at local: {_cubies[x, y, z].localPosition}, world: {_cubies[x, y, z].position}, TO: [{point.x}, {point.y}, {point.z}]");
+                    // Debug.Log($"copying [{x},{y},{z}] at local: {_cubies[x, y, z].localPosition}, world: {_cubies[x, y, z].position}, TO: [{point.x}, {point.y}, {point.z}]");
                     cubiesCopy[point.x, point.y, point.z] = _cubies[x, y, z];
                 }
             }
@@ -188,15 +256,10 @@ public class CubeController : MonoBehaviour
         _cubies = cubiesCopy;
     }
 
-    // Rotates the indices of a layer by 90 degrees around primary axes
-    private void RotateLayerIndices(CubeLayer layer, bool clockWise)
-    {
-    }
-
   
 }
 
-enum CubeLayer
+public enum CubeLayer
 {
     L,
     X,

@@ -462,6 +462,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CubeController
   cubiePrefab: {fileID: 919132149155446097, guid: 509cfb5ad31554dcf89771555fdb7711, type: 3}
+  _cubeSize: 3
+  _cubieBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  _cubiePadding: 0.1
+  rotationDegreesPerSecond: 720
+  _isRotating: 0
 --- !u!4 &1515947556
 Transform:
   m_ObjectHideFlags: 0

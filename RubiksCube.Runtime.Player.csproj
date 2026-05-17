@@ -49,7 +49,9 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/Runtime/CubeController.cs" />
     <Compile Include="Assets/Scripts/Runtime/CubieGridMapper.cs" />
+    <Compile Include="Assets/Scripts/Runtime/RotationQueueHelper.cs" />
     <Compile Include="Assets/Scripts/Runtime/Rotations.cs" />
+    <Compile Include="Assets/Scripts/Runtime/Input/CubeActions.cs" />
     <Compile Include="Assets/Scripts/Runtime/Debug/Logger.cs" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/6000.3.8f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/Variations/mono/Managed/UnityEngine.dll</HintPath>
@@ -671,6 +673,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.InputSystem.Player.csproj">
+      <Project>{e1f112b3-a83b-30e7-1a37-82331a0236e7}</Project>
+      <Name>Unity.InputSystem.Player</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEngine.UI.Player.csproj">
       <Project>{817e52f3-99e4-ced7-b89e-3560942cb616}</Project>
       <Name>UnityEngine.UI.Player</Name>

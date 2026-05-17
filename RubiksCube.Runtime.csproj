@@ -49,7 +49,9 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/Runtime/CubeController.cs" />
     <Compile Include="Assets/Scripts/Runtime/CubieGridMapper.cs" />
+    <Compile Include="Assets/Scripts/Runtime/RotationQueueHelper.cs" />
     <Compile Include="Assets/Scripts/Runtime/Rotations.cs" />
+    <Compile Include="Assets/Scripts/Runtime/Input/CubeActions.cs" />
     <Compile Include="Assets/Scripts/Runtime/Debug/Logger.cs" />
     <None Include="Assets/Scripts/Runtime/RubiksCube.Runtime.asmdef" />
     <Reference Include="UnityEngine">
@@ -879,6 +881,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.InputSystem.csproj">
+      <Project>{0e37b948-41b1-bc0d-d2de-d910b36d9770}</Project>
+      <Name>Unity.InputSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{8ff2f994-4048-c38a-be36-67ffb810216a}</Project>
       <Name>UnityEditor.UI</Name>

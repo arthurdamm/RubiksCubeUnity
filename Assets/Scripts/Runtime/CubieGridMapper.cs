@@ -29,5 +29,29 @@ public class CubieGridMapper
             Mathf.RoundToInt(point.z / (_cubieBounds.size.z + _cubiePadding) + _cubeSize / 2),
             Mathf.RoundToInt(point.y / (_cubieBounds.size.y + _cubiePadding) + _cubeSize / 2));
 
-    }    
+    }
+    
+    public (int, int, int, int, int, int) GetStartStopForIteration(CubeLayer layer)
+    {
+        int xStart = 0, xStop = _cubeSize - 1, yStart = 0, yStop = _cubeSize - 1, zStart = 0, zStop = _cubeSize - 1;
+        
+        switch (layer)
+        {
+            case CubeLayer.L: xStart = xStop = 0; break;
+            case CubeLayer.X: xStart = xStop = 1; break;
+            case CubeLayer.R: xStart = xStop = 2; break;
+            
+            case CubeLayer.F: yStart = yStop = 0; break;
+            case CubeLayer.Y: yStart = yStop = 1; break;
+            case CubeLayer.B: yStart = yStop = 2; break;
+            
+            case CubeLayer.D: zStart = zStop = 0; break;
+            case CubeLayer.Z: zStart = zStop = 1; break;
+            case CubeLayer.U: zStart = zStop = 2; break;
+        }
+
+        return (xStart, xStop, yStart, yStop, zStart, zStop);
+    }
+
+
 }
