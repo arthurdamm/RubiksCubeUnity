@@ -13,6 +13,7 @@ public class CubeController : MonoBehaviour
     [SerializeField] private float _cubiePadding = 0.1f;
 
     [SerializeField] private float rotationDegreesPerSecond = 30f;
+    [SerializeField] private float lookRotationDegreesPerSecond = 90f;
 
     private CubieGridMapper _cubieGridMapper;
     
@@ -37,7 +38,7 @@ public class CubeController : MonoBehaviour
 
     private CubeActions _cubeActions;
     private CubeActions.GameplayActions _gameplay;
-    private InputAction _counterClockwise;
+    private InputAction _counterClockwise, _look;
 
 
     void Awake()
@@ -45,6 +46,7 @@ public class CubeController : MonoBehaviour
         _cubeActions = new();
         _gameplay = _cubeActions.Gameplay;
         _counterClockwise = _gameplay.CounterClockwise;
+        _look = _gameplay.Look;
     }
     
     void Start()
@@ -67,6 +69,7 @@ public class CubeController : MonoBehaviour
         _gameplay.Right.performed += OnRightPerformed;
         _gameplay.Front.performed += OnFrontPerformed;
         _gameplay.Back.performed += OnBackPerformed;
+        _gameplay.Look.performed += OnLookPerformed;
     }
     
     private void OnDisable()
@@ -77,9 +80,16 @@ public class CubeController : MonoBehaviour
         _gameplay.Right.performed -= OnRightPerformed;
         _gameplay.Front.performed -= OnFrontPerformed;
         _gameplay.Back.performed -= OnBackPerformed;
+        _gameplay.Look.performed -= OnLookPerformed;
         _gameplay.Disable();
     }
-    
+
+    private void OnLookPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log($"OnLook() {context}");
+        
+    }
+
     private void OnDestroy()
     {
         _cubeActions.Dispose();
@@ -110,6 +120,7 @@ public class CubeController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ReadInput();
         if (_isRotating)
         {
             // Logger.LogOnce($"UPDATE {Time.time}");
@@ -118,6 +129,16 @@ public class CubeController : MonoBehaviour
             AnimateRotateLayer();
         }
 
+    }
+
+    private void ReadInput()
+    {
+        if (_look.IsPressed())
+        {
+            var inputValue = _look.ReadValue<Vector2>();
+            transform.Rotate(Vector3.up, inputValue.x * lookRotationDegreesPerSecond * Time.deltaTime, Space.World);
+            transform.Rotate(Vector3.right, inputValue.y * lookRotationDegreesPerSecond * Time.deltaTime, Space.World);
+        }
     }
 
     private void PerformFaceRotations(InputAction.CallbackContext ctx)
@@ -208,23 +229,45 @@ public class CubeController : MonoBehaviour
 
         (xStart, xStop, yStart, yStop, zStart, zStop) = _cubieGridMapper.GetStartStopForIteration(layer);
 
-        Vector3 center = _cubies[(xStart + xStop) / 2, (yStart + yStop) / 2, (zStart + zStop) / 2].position;
+        Transform centerTransform = _cubies[(xStart + xStop) / 2, (yStart + yStop) / 2, (zStart + zStop) / 2];
+        Vector3 center = centerTransform.position;
         Vector3 axis = Vector3.up;
+
+        Func<Transform, Vector3> f = null;
 
         switch ((int)layer / _cubeSize)
         {
-            case 0 : axis = Vector3.right; break;
-            case 1 : axis = Vector3.forward; break;
-            case 2 : axis = Vector3.up; break;
+            case 0 : axis = transform.right;
+                f = (t) => t.right; break;
+            case 1 : axis = transform.forward; f = (t) => t.forward; break;
+            case 2 : axis = transform.up; f = (t) => t.up; break;
         }
 
+        var dummyAxis = new GameObject("DummyAxis");
+        var dummyPoint = new GameObject("DummyPoint");
+        dummyAxis.transform.position = transform.position;
+        dummyPoint.transform.position = transform.position;
+        dummyAxis.transform.SetParent(transform);
+        dummyPoint.transform.SetParent(dummyAxis.transform);
+        
         for (int x = xStart; x <= xStop; x++)
         {
             for (int y = yStart; y <= yStop; y++)
             {
                 for (int z = zStart; z <= zStop; z++)
                 {
-                    _cubies[x, y, z].RotateAround(center, axis, degrees);
+                    // _cubies[x, y, z].RotateAround(center, axis, degrees);
+                    Transform t = _cubies[x, y, z];
+                    dummyAxis.transform.position = center;
+                    dummyAxis.transform.rotation = Quaternion.identity;
+                    
+                    dummyPoint.transform.position = t.position;
+                    
+                    dummyAxis.transform.Rotate(axis, degrees, Space.Self);
+                    
+                    
+                    t.position = dummyPoint.transform.position;
+                    t.Rotate(t.InverseTransformDirection(axis), degrees, Space.Self);
                 }
             }
         }

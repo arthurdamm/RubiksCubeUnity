@@ -50,6 +50,7 @@
     <Compile Include="Assets/Tests/LayerTests.cs" />
     <Compile Include="Assets/Tests/BasicRotationTests.cs" />
     <Compile Include="Assets/Tests/CubieGridMapperTests.cs" />
+    <Compile Include="Assets/Tests/Quaternions/QuaternionTests.cs" />
     <None Include="Assets/Tests/Tests.asmdef" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/6000.3.8f1/Unity.app/Contents/Resources/Scripting/Managed/UnityEngine/UnityEngine.dll</HintPath>
