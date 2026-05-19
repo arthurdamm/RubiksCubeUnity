@@ -19,7 +19,6 @@ public class CubeController : MonoBehaviour
     
     private Transform[,,] _cubies;
 
-
     private CubeLayer _layerToRotate;
     private float _degreesToRotateRemaining = 0f;
     
@@ -27,7 +26,6 @@ public class CubeController : MonoBehaviour
     
     private Queue<(CubeLayer, float)> _rotationQueue = new();
 
-    private InputAction _lookAction;
     private InputAction _upAction;
     private InputAction _downAction;
     private InputAction _leftAction;
@@ -35,18 +33,21 @@ public class CubeController : MonoBehaviour
     private InputAction _forwardAction;
     private InputAction _backAction;
     private InputAction _faceRotations;
+    private InputAction _counterClockwiseAction;
+    private InputAction _lookAction;
+    private InputAction _resetAction;
 
-    private CubeActions _cubeActions;
-    private CubeActions.GameplayActions _gameplay;
-    private InputAction _counterClockwise, _look;
+    private CubeActions _cubeInputAsset;
+    private CubeActions.GameplayActions _gameplayMap;
 
 
     void Awake()
     {
-        _cubeActions = new();
-        _gameplay = _cubeActions.Gameplay;
-        _counterClockwise = _gameplay.CounterClockwise;
-        _look = _gameplay.Look;
+        _cubeInputAsset = new();
+        _gameplayMap = _cubeInputAsset.Gameplay;
+        _counterClockwiseAction = _gameplayMap.CounterClockwise;
+        _lookAction = _gameplayMap.Look;
+        _resetAction = _gameplayMap.Reset;
     }
     
     void Start()
@@ -62,40 +63,35 @@ public class CubeController : MonoBehaviour
 
     private void OnEnable()
     {
-        _gameplay.Enable();
-        _gameplay.Up.performed += OnUpPerformed;
-        _gameplay.Down.performed += OnDownPerformed;
-        _gameplay.Left.performed += OnLeftPerformed;
-        _gameplay.Right.performed += OnRightPerformed;
-        _gameplay.Front.performed += OnFrontPerformed;
-        _gameplay.Back.performed += OnBackPerformed;
-        _gameplay.Look.performed += OnLookPerformed;
+        _gameplayMap.Enable();
+        _gameplayMap.Up.performed += OnUpPerformed;
+        _gameplayMap.Down.performed += OnDownPerformed;
+        _gameplayMap.Left.performed += OnLeftPerformed;
+        _gameplayMap.Right.performed += OnRightPerformed;
+        _gameplayMap.Front.performed += OnFrontPerformed;
+        _gameplayMap.Back.performed += OnBackPerformed;
+        _gameplayMap.Reset.performed += OnResetPerformed;
     }
     
     private void OnDisable()
     {
-        _gameplay.Up.performed -= OnUpPerformed;
-        _gameplay.Down.performed -= OnDownPerformed;
-        _gameplay.Left.performed -= OnLeftPerformed;
-        _gameplay.Right.performed -= OnRightPerformed;
-        _gameplay.Front.performed -= OnFrontPerformed;
-        _gameplay.Back.performed -= OnBackPerformed;
-        _gameplay.Look.performed -= OnLookPerformed;
-        _gameplay.Disable();
+        _gameplayMap.Up.performed -= OnUpPerformed;
+        _gameplayMap.Down.performed -= OnDownPerformed;
+        _gameplayMap.Left.performed -= OnLeftPerformed;
+        _gameplayMap.Right.performed -= OnRightPerformed;
+        _gameplayMap.Front.performed -= OnFrontPerformed;
+        _gameplayMap.Back.performed -= OnBackPerformed;
+        _gameplayMap.Reset.performed -= OnResetPerformed;
+        _gameplayMap.Disable();
     }
 
-    private void OnLookPerformed(InputAction.CallbackContext context)
-    {
-        Debug.Log($"OnLook() {context}");
-        
-    }
+
 
     private void OnDestroy()
     {
-        _cubeActions.Dispose();
+        _cubeInputAsset.Dispose();
     }
-
-
+    
     private void SpawnCubies()
     {
         _cubies = new Transform[_cubeSize, _cubeSize, _cubeSize];
@@ -108,14 +104,16 @@ public class CubeController : MonoBehaviour
                 {
                     Vector3 spawnPosition = _cubieGridMapper.GridIndexToLocalPosition(new Vector3Int(x, y, z));
                     Debug.Log(spawnPosition);
-                    spawnPosition += transform.position;
-                    GameObject cubieGo = Instantiate(cubiePrefab, spawnPosition, Quaternion.identity, transform);
+                    // spawnPosition += transform.position;
+                    GameObject cubieGo = Instantiate(cubiePrefab, transform.position, transform.rotation, transform);
+                    cubieGo.transform.localPosition = spawnPosition;
                     cubieGo.name = $"Cubie ({x}, {y}, {z})";
                     _cubies[x, y, z] = cubieGo.transform;
                 }
             }
         }
     }
+
     
     // Update is called once per frame
     void Update()
@@ -130,64 +128,74 @@ public class CubeController : MonoBehaviour
         }
 
     }
-
+    
+    // Should this method have a better name? Should it change transform?
     private void ReadInput()
     {
-        if (_look.IsPressed())
+        if (_lookAction.IsPressed())
         {
-            var inputValue = _look.ReadValue<Vector2>();
+            var inputValue = _lookAction.ReadValue<Vector2>();
             transform.Rotate(Vector3.up, inputValue.x * lookRotationDegreesPerSecond * Time.deltaTime, Space.World);
             transform.Rotate(Vector3.right, inputValue.y * lookRotationDegreesPerSecond * Time.deltaTime, Space.World);
         }
     }
 
-    private void PerformFaceRotations(InputAction.CallbackContext ctx)
+    private void OnResetPerformed(InputAction.CallbackContext context)
     {
-        var inputValue = ctx.ReadValue<Vector3>();
-
-        if (inputValue == Vector3.zero) return;
+        if (_isRotating) return;
         
-        Debug.Log($"PerformFaceRotations() {inputValue} pressed: {_faceRotations.IsPressed()} performed: {ctx.performed} cancel: {ctx.canceled} {ctx.ToString()}");
+        Debug.Log("OnReset()");
+        for (int x = 0; x < _cubeSize; x++)
+        {
+            for (int y = 0; y < _cubeSize; y++)
+            {
+                for (int z = 0; z < _cubeSize; z++)
+                {
+                    _cubies[x, y, z].rotation = transform.rotation;
+                }
+            }
+        }
     }
+
     private void OnUpPerformed(InputAction.CallbackContext context)
     {
         Debug.Log($"OnUpPerformed() {context}");
-        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
         QueueRotateLayer(CubeLayer.U, 90 * signMultiplier);
     }
     
     private void OnDownPerformed(InputAction.CallbackContext context)
     {
         Debug.Log($"OnDownPerformed() {context}");
-        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
         QueueRotateLayer(CubeLayer.D, 90 * signMultiplier);
     }
 
     private void OnLeftPerformed(InputAction.CallbackContext context)
     {
         Debug.Log($"OnLeftPerformed() {context}");
-        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
         QueueRotateLayer(CubeLayer.L, 90 * signMultiplier);
     }
 
     private void OnRightPerformed(InputAction.CallbackContext context)
     {
         Debug.Log($"OnRightPerformed() {context}");
-        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
         QueueRotateLayer(CubeLayer.R, 90 * signMultiplier);
     }
 
     private void OnFrontPerformed(InputAction.CallbackContext context)
     {
         Debug.Log($"OnFrontPerformed() {context}");
-        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
         QueueRotateLayer(CubeLayer.F, 90 * signMultiplier);
     }
 
     private void OnBackPerformed(InputAction.CallbackContext context)
     {
         Debug.Log($"OnBackPerformed() {context}");
-        int signMultiplier = _counterClockwise.IsPressed() ? -1 : 1;
+        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
         QueueRotateLayer(CubeLayer.B, 90 * signMultiplier);
     }
     
