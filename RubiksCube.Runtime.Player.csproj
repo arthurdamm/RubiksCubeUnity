@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/Runtime/CubeController.cs" />
     <Compile Include="Assets/Scripts/Runtime/Learn/CubeRotationFromManual.cs" />
+    <Compile Include="Assets/Scripts/Runtime/Learn/FaceIdentifier.cs" />
     <Compile Include="Assets/Scripts/Runtime/CubieGridMapper.cs" />
     <Compile Include="Assets/Scripts/Runtime/RotationQueueHelper.cs" />
     <Compile Include="Assets/Scripts/Runtime/Rotations.cs" />

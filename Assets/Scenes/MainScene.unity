@@ -442,6 +442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1515947556}
   - component: {fileID: 1515947555}
+  - component: {fileID: 1515947557}
   m_Layer: 0
   m_Name: CubeController
   m_TagString: Untagged
@@ -466,9 +467,9 @@ MonoBehaviour:
   _cubieBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
-  _cubiePadding: 0.1
+  _cubiePadding: 0.01
   rotationDegreesPerSecond: 720
-  lookRotationDegreesPerSecond: 90
+  lookRotationDegreesPerSecond: 300
   _isRotating: 0
 --- !u!4 &1515947556
 Transform:
@@ -485,6 +486,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -43.706, y: -45.937, z: 56.229}
+--- !u!114 &1515947557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9338dc2aa3e864b85970e828dec81b68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RubiksCube.Runtime::FaceIdentifier
+  cameraTransform: {fileID: 330585546}
+  gizmoLength: 5
+  _worldDirectionMatchingCameraUp: {x: 0, y: 0, z: 0}
+  _localDirectionMatchingCameraUp: {x: 0, y: 0, z: 0}
+  _worldDirectionMatchingCameraBack: {x: 0, y: 0, z: 0}
+  _localDirectionMatchingCameraBack: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

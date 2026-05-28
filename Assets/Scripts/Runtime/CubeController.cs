@@ -118,7 +118,7 @@ public class CubeController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ReadInput();
+        ReadAndApplyLookInput();
         if (_isRotating)
         {
             // Logger.LogOnce($"UPDATE {Time.time}");
@@ -130,7 +130,7 @@ public class CubeController : MonoBehaviour
     }
     
     // Should this method have a better name? Should it change transform?
-    private void ReadInput()
+    private void ReadAndApplyLookInput()
     {
         if (_lookAction.IsPressed())
         {
