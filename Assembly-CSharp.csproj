@@ -85,11 +85,11 @@
     <None Include="Library/PackageCache/com.unity.modules.imageconversion/package.json" />
     <None Include="Library/PackageCache/com.unity.shadergraph@d44b48771ebb/package.json" />
     <None Include="Library/PackageCache/com.unity.modules.unityanalytics/package.json" />
-    <None Include="Library/PackageCache/com.unity.ide.rider@4504839d03f7/package.json" />
+    <None Include="Library/PackageCache/com.unity.ide.rider@e4950c6d131b/package.json" />
     <None Include="Library/PackageCache/com.unity.searcher@d45a78918735/package.json" />
     <None Include="Library/PackageCache/com.unity.modules.video/package.json" />
     <None Include="Library/PackageCache/com.unity.shadergraph@d44b48771ebb/ValidationConfig.json" />
-    <None Include="Library/PackageCache/com.unity.ide.rider@4504839d03f7/ValidationExceptions.json" />
+    <None Include="Library/PackageCache/com.unity.ide.rider@e4950c6d131b/ValidationExceptions.json" />
     <None Include="Library/PackageCache/com.unity.test-framework@0b7a23ab2e1d/package.json" />
     <None Include="Library/PackageCache/com.unity.nuget.mono-cecil@ecb9724e46ff/package.json" />
     <None Include="Library/PackageCache/com.unity.modules.particlesystem/package.json" />

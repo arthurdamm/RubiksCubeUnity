@@ -176,7 +176,7 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Reset"",
                     ""type"": ""Button"",
-                    ""id"": ""e01ebc65-4b5c-48f9-ba28-e60564d8d2c9"",
+                    ""id"": ""82fb1286-b7d6-415a-afad-29a6cb5e9bf5"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -395,12 +395,60 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""78b50678-4400-45fe-91ef-c15e2ce59860"",
+                    ""id"": ""0342dc84-55be-431f-b9ea-c4872b21ab53"",
                     ""path"": ""<Keyboard>/backspace"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Pointer"",
+            ""id"": ""4a69459d-37bc-4b03-939a-5429ef02724d"",
+            ""actions"": [
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""819dfabf-e2b2-4cae-9084-fa9135f44a36"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""95b58efa-10d1-4469-a6ef-2586e9a8826c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""a25c0f9d-7182-432a-a3c0-c4bb58414f38"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";My Mouse"",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b7a5aa15-4e31-4a8e-b038-3834d259b306"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";My Mouse"",
+                    ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -414,6 +462,17 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
             ""devices"": [
                 {
                     ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""My Mouse"",
+            ""bindingGroup"": ""My Mouse"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Mouse>"",
                     ""isOptional"": false,
                     ""isOR"": false
                 }
@@ -433,11 +492,16 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
         m_Gameplay_CounterClockwise = m_Gameplay.FindAction("CounterClockwise", throwIfNotFound: true);
         m_Gameplay_Look = m_Gameplay.FindAction("Look", throwIfNotFound: true);
         m_Gameplay_Reset = m_Gameplay.FindAction("Reset", throwIfNotFound: true);
+        // Pointer
+        m_Pointer = asset.FindActionMap("Pointer", throwIfNotFound: true);
+        m_Pointer_Point = m_Pointer.FindAction("Point", throwIfNotFound: true);
+        m_Pointer_Click = m_Pointer.FindAction("Click", throwIfNotFound: true);
     }
 
     ~@CubeActions()
     {
         UnityEngine.Debug.Assert(!m_Gameplay.enabled, "This will cause a leak and performance issues, CubeActions.Gameplay.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Pointer.enabled, "This will cause a leak and performance issues, CubeActions.Pointer.Disable() has not been called.");
     }
 
     /// <summary>
@@ -704,6 +768,113 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="GameplayActions" /> instance referencing this action map.
     /// </summary>
     public GameplayActions @Gameplay => new GameplayActions(this);
+
+    // Pointer
+    private readonly InputActionMap m_Pointer;
+    private List<IPointerActions> m_PointerActionsCallbackInterfaces = new List<IPointerActions>();
+    private readonly InputAction m_Pointer_Point;
+    private readonly InputAction m_Pointer_Click;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Pointer".
+    /// </summary>
+    public struct PointerActions
+    {
+        private @CubeActions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public PointerActions(@CubeActions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Pointer/Point".
+        /// </summary>
+        public InputAction @Point => m_Wrapper.m_Pointer_Point;
+        /// <summary>
+        /// Provides access to the underlying input action "Pointer/Click".
+        /// </summary>
+        public InputAction @Click => m_Wrapper.m_Pointer_Click;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Pointer; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="PointerActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(PointerActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="PointerActions" />
+        public void AddCallbacks(IPointerActions instance)
+        {
+            if (instance == null || m_Wrapper.m_PointerActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PointerActionsCallbackInterfaces.Add(instance);
+            @Point.started += instance.OnPoint;
+            @Point.performed += instance.OnPoint;
+            @Point.canceled += instance.OnPoint;
+            @Click.started += instance.OnClick;
+            @Click.performed += instance.OnClick;
+            @Click.canceled += instance.OnClick;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="PointerActions" />
+        private void UnregisterCallbacks(IPointerActions instance)
+        {
+            @Point.started -= instance.OnPoint;
+            @Point.performed -= instance.OnPoint;
+            @Point.canceled -= instance.OnPoint;
+            @Click.started -= instance.OnClick;
+            @Click.performed -= instance.OnClick;
+            @Click.canceled -= instance.OnClick;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="PointerActions.UnregisterCallbacks(IPointerActions)" />.
+        /// </summary>
+        /// <seealso cref="PointerActions.UnregisterCallbacks(IPointerActions)" />
+        public void RemoveCallbacks(IPointerActions instance)
+        {
+            if (m_Wrapper.m_PointerActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="PointerActions.AddCallbacks(IPointerActions)" />
+        /// <seealso cref="PointerActions.RemoveCallbacks(IPointerActions)" />
+        /// <seealso cref="PointerActions.UnregisterCallbacks(IPointerActions)" />
+        public void SetCallbacks(IPointerActions instance)
+        {
+            foreach (var item in m_Wrapper.m_PointerActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_PointerActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="PointerActions" /> instance referencing this action map.
+    /// </summary>
+    public PointerActions @Pointer => new PointerActions(this);
     private int m_MyKeyboardSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -715,6 +886,19 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
         {
             if (m_MyKeyboardSchemeIndex == -1) m_MyKeyboardSchemeIndex = asset.FindControlSchemeIndex("MyKeyboard");
             return asset.controlSchemes[m_MyKeyboardSchemeIndex];
+        }
+    }
+    private int m_MyMouseSchemeIndex = -1;
+    /// <summary>
+    /// Provides access to the input control scheme.
+    /// </summary>
+    /// <seealso cref="UnityEngine.InputSystem.InputControlScheme" />
+    public InputControlScheme MyMouseScheme
+    {
+        get
+        {
+            if (m_MyMouseSchemeIndex == -1) m_MyMouseSchemeIndex = asset.FindControlSchemeIndex("My Mouse");
+            return asset.controlSchemes[m_MyMouseSchemeIndex];
         }
     }
     /// <summary>
@@ -794,5 +978,27 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnReset(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Pointer" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="PointerActions.AddCallbacks(IPointerActions)" />
+    /// <seealso cref="PointerActions.RemoveCallbacks(IPointerActions)" />
+    public interface IPointerActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Point" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPoint(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnClick(InputAction.CallbackContext context);
     }
 }
