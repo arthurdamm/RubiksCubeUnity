@@ -12,6 +12,14 @@ public class CubieGridMapper
         _cubiePadding = cubiePadding;
         _cubieBounds = cubieBounds;
     }
+
+    public Vector3 CubeSize()
+    {
+        return new Vector3(
+            (_cubieBounds.size.x + _cubiePadding) * _cubeSize,
+            (_cubieBounds.size.y + _cubiePadding) * _cubeSize,
+            (_cubieBounds.size.z + _cubiePadding) * _cubeSize);
+    }
     
     public Vector3 GridIndexToLocalPosition(Vector3Int point)
     {

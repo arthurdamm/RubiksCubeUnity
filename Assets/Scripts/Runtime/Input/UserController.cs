@@ -56,11 +56,16 @@ public class UserController : MonoBehaviour
 
     private void CastRay(Vector3 pointerPosition)
     {
+        Debug.Log($"CastRay({pointerPosition})");
         Ray ray = mainCamera.ScreenPointToRay(pointerPosition);
-        Debug.DrawRay(ray.origin, ray.direction * rayLength, Color.blueViolet);
-        Debug.DrawLine(Vector3.zero, Vector3.right * rayLength, Color.brown, 60f);
-        Vector3 start = ray.origin + Vector3.up * 3f;
-        Debug.DrawLine(start, start + ray.direction * rayLength, Color.black);
+
+        if (!Physics.Raycast(ray, out RaycastHit hit))
+        {
+            Debug.Log("NO HIT!");
+            return;
+        }
+        
+        Debug.Log($"HIT: {hit}");
     }
     
     private void ReadPointerInput()
@@ -88,28 +93,22 @@ public class UserController : MonoBehaviour
 
     private void OnZoomPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"OnZoom {context}");
+        // Debug.Log($"OnZoom {context}");
         var inputValue = context.ReadValue<Vector2>();
         float zoomAmount = inputValue.y * zoomScale;
         _cameraZoomDelta += zoomAmount;
-        
-
     }
 
     private void OnPointerPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"OnPointer: {context}");
+        // Debug.Log($"OnPointer: {context}");
+        
     }
 
     private void OnClickPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log("OnClickPerformed()");
-        ReadPointerInput();
-    }
-
-    
-    private void OnClickStarted(InputAction.CallbackContext context)
-    {
-        Debug.Log("onClickStarted()");
+        var pointerPosition = _pointerAction.ReadValue<Vector2>();
+        Debug.Log($"OnClickPerformed() at {pointerPosition} : {context}");
+        CastRay(pointerPosition);
     }
 }

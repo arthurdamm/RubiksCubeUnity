@@ -62,6 +62,9 @@ public class CubeController : MonoBehaviour
         _cubieGridMapper = new CubieGridMapper(_cubeSize, _cubiePadding, _cubieBounds);
         SpawnCubies();
 
+        var collider = GetComponent<BoxCollider>();
+        collider.size = _cubieGridMapper.CubeSize();
+
         TryDequeRotation();
     }
 
