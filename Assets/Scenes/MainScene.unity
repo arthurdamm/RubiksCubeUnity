@@ -520,6 +520,9 @@ MonoBehaviour:
   mainCamera: {fileID: 1023545062}
   rayLength: 20
   position: {x: 0, y: 0, z: 0}
+  zoomSpeed: 200
+  zoomScale: 1
+  _cameraZoomDelta: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

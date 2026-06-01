@@ -8,12 +8,15 @@ public class UserController : MonoBehaviour
     [SerializeField] private float rayLength = 20f;
     [SerializeField] private Vector3 position;
 
-    [SerializeField] private float zoomScale = 2f;
+    [SerializeField] private float zoomSpeed = 200f;
+    [SerializeField] private float zoomScale = 1f;
 
     private CubeActions _cubeActions;
     private InputAction _pointerAction;
     private InputAction _clickAction;
     private InputAction _zoomAction;
+
+    public float _cameraZoomDelta;
     
     
 
@@ -32,6 +35,23 @@ public class UserController : MonoBehaviour
 
     void Update()
     {
+        TryZoomCamera();
+    }
+
+    private void TryZoomCamera()
+    {
+        var absDelta = Mathf.Abs(_cameraZoomDelta);
+        if (absDelta < 1e-1)
+        {
+            return;
+        }
+
+        float zoomAmount = zoomSpeed * Time.deltaTime;
+        zoomAmount = Mathf.Min(zoomAmount, absDelta) * Mathf.Sign(_cameraZoomDelta);
+        mainCamera.transform.Translate(Vector3.forward * zoomAmount, Space.Self);
+        Debug.Log($"Translate {zoomAmount}");
+        _cameraZoomDelta -= zoomAmount;
+
     }
 
     private void CastRay(Vector3 pointerPosition)
@@ -71,8 +91,9 @@ public class UserController : MonoBehaviour
         Debug.Log($"OnZoom {context}");
         var inputValue = context.ReadValue<Vector2>();
         float zoomAmount = inputValue.y * zoomScale;
-        mainCamera.transform.Translate(Vector3.forward * zoomAmount, Space.Self);
+        _cameraZoomDelta += zoomAmount;
         
+
     }
 
     private void OnPointerPerformed(InputAction.CallbackContext context)
