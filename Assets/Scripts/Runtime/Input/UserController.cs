@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ScreenRay : MonoBehaviour
+public class UserController : MonoBehaviour
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private float rayLength = 20f;
@@ -27,14 +27,20 @@ public class ScreenRay : MonoBehaviour
 
     void Update()
     {
-        // Ray ray = mainCamera.ScreenPointToRay(position);
-        // Debug.DrawRay(ray.origin, ray.direction * rayLength, Color.blueViolet);
-        // Debug.DrawLine(Vector3.zero, Vector3.right * rayLength, Color.brown, 60f);
-        // Vector3 start = ray.origin + Vector3.up * 3f;
-        // Debug.DrawLine(start, start + ray.direction * rayLength, Color.black);
 
-        // ReadPointerInput();
+
+     
     }
+
+    private void CastRay(Vector3 pointerPosition)
+    {
+        Ray ray = mainCamera.ScreenPointToRay(pointerPosition);
+        Debug.DrawRay(ray.origin, ray.direction * rayLength, Color.blueViolet);
+        Debug.DrawLine(Vector3.zero, Vector3.right * rayLength, Color.brown, 60f);
+        Vector3 start = ray.origin + Vector3.up * 3f;
+        Debug.DrawLine(start, start + ray.direction * rayLength, Color.black);
+    }
+    
     private void ReadPointerInput()
     {
         var inputValue = _pointerAction.ReadValue<Vector2>();
@@ -47,12 +53,13 @@ public class ScreenRay : MonoBehaviour
         _clickAction.started += OnClickStarted;
         _clickAction.performed += OnClickPerformed;
         
-        Debug.Log($"click enabled: {_cubeActions.Pointer.enabled} {_clickAction.enabled}");
+        Debug.Log($"PointerMap enabled: {_cubeActions.Pointer.enabled} clickAction: {_clickAction.enabled} pointerAction: {_pointerAction.enabled}");
     }
 
     private void OnClickPerformed(InputAction.CallbackContext context)
     {
         Debug.Log("OnClickPerformed()");
+        ReadPointerInput();
     }
 
     private void OnDisable()

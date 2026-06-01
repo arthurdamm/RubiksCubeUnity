@@ -325,7 +325,7 @@
             "id": "4a69459d-37bc-4b03-939a-5429ef02724d",
             "actions": [
                 {
-                    "name": "Point",
+                    "name": "Pointer",
                     "type": "PassThrough",
                     "id": "819dfabf-e2b2-4cae-9084-fa9135f44a36",
                     "expectedControlType": "Vector2",
@@ -351,7 +351,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";My Mouse",
-                    "action": "Point",
+                    "action": "Pointer",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
