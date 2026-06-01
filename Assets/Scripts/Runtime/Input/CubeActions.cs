@@ -427,6 +427,15 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""dcf5ccc2-1b84-42e1-972b-71c4ad3b97e2"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -449,6 +458,17 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";My Mouse"",
                     ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3c91c177-b828-4364-8956-8d7ac90e9587"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";My Mouse"",
+                    ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -496,6 +516,7 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
         m_Pointer = asset.FindActionMap("Pointer", throwIfNotFound: true);
         m_Pointer_Pointer = m_Pointer.FindAction("Pointer", throwIfNotFound: true);
         m_Pointer_Click = m_Pointer.FindAction("Click", throwIfNotFound: true);
+        m_Pointer_Zoom = m_Pointer.FindAction("Zoom", throwIfNotFound: true);
     }
 
     ~@CubeActions()
@@ -774,6 +795,7 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
     private List<IPointerActions> m_PointerActionsCallbackInterfaces = new List<IPointerActions>();
     private readonly InputAction m_Pointer_Pointer;
     private readonly InputAction m_Pointer_Click;
+    private readonly InputAction m_Pointer_Zoom;
     /// <summary>
     /// Provides access to input actions defined in input action map "Pointer".
     /// </summary>
@@ -793,6 +815,10 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Pointer/Click".
         /// </summary>
         public InputAction @Click => m_Wrapper.m_Pointer_Click;
+        /// <summary>
+        /// Provides access to the underlying input action "Pointer/Zoom".
+        /// </summary>
+        public InputAction @Zoom => m_Wrapper.m_Pointer_Zoom;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -825,6 +851,9 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
             @Click.started += instance.OnClick;
             @Click.performed += instance.OnClick;
             @Click.canceled += instance.OnClick;
+            @Zoom.started += instance.OnZoom;
+            @Zoom.performed += instance.OnZoom;
+            @Zoom.canceled += instance.OnZoom;
         }
 
         /// <summary>
@@ -842,6 +871,9 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
             @Click.started -= instance.OnClick;
             @Click.performed -= instance.OnClick;
             @Click.canceled -= instance.OnClick;
+            @Zoom.started -= instance.OnZoom;
+            @Zoom.performed -= instance.OnZoom;
+            @Zoom.canceled -= instance.OnZoom;
         }
 
         /// <summary>
@@ -1000,5 +1032,12 @@ public partial class @CubeActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnClick(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Zoom" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnZoom(InputAction.CallbackContext context);
     }
 }

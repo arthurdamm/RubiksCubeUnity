@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 
 public class CubeController : MonoBehaviour
@@ -142,6 +146,7 @@ public class CubeController : MonoBehaviour
 
     private void OnResetPerformed(InputAction.CallbackContext context)
     {
+        Mouse.current.WarpCursorPosition(Vector2.zero);
         if (_isRotating) return;
         
         Debug.Log("OnReset()");
