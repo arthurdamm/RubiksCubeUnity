@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class UserController : MonoBehaviour
 {
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private float rayLength = 20f;
+    [SerializeField] private float rayLength = 5f;
     [SerializeField] private Vector3 position;
 
     [SerializeField] private float zoomSpeed = 200f;
@@ -18,8 +18,6 @@ public class UserController : MonoBehaviour
 
     public float _cameraZoomDelta;
     
-    
-
     void Awake()
     {
         _cubeActions = new ();
@@ -64,8 +62,10 @@ public class UserController : MonoBehaviour
             Debug.Log("NO HIT!");
             return;
         }
-        
         Debug.Log($"HIT: {hit}");
+        
+        Debug.DrawLine(hit.point, hit.point + hit.normal * rayLength, Color.darkBlue, 5f);
+        
     }
     
     private void ReadPointerInput()
@@ -101,14 +101,14 @@ public class UserController : MonoBehaviour
 
     private void OnPointerPerformed(InputAction.CallbackContext context)
     {
-        // Debug.Log($"OnPointer: {context}");
+        Debug.Log($"OnPointer: {_clickAction.IsPressed()}");
         
     }
 
     private void OnClickPerformed(InputAction.CallbackContext context)
     {
         var pointerPosition = _pointerAction.ReadValue<Vector2>();
-        Debug.Log($"OnClickPerformed() at {pointerPosition} : {context}");
+        Debug.Log($"OnClickPerformed({_clickAction.IsPressed()}) at {pointerPosition} : {context}");
         CastRay(pointerPosition);
     }
 }

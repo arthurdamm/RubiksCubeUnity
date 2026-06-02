@@ -232,6 +232,11 @@ public class CubeController : MonoBehaviour
 
     private void TryDequeRotation()
     {
+        // CubeLayerRotation rot = new CubeLayerRotation {
+        //     Layer = new CubeLayerGeneral(CubeAxis.X, 1),
+        //     Degrees = 90f
+        // };
+        
         if (!_isRotating && _rotationQueue.Count > 0)
         {
             (_layerToRotate, _degreesToRotateRemaining) = _rotationQueue.Dequeue();
@@ -295,10 +300,7 @@ public class CubeController : MonoBehaviour
         int xStart, xStop, yStart, yStop, zStart, zStop;
 
         (xStart, xStop, yStart, yStop, zStart, zStop) = _cubieGridMapper.GetStartStopForIteration(layer);
-
         Transform[,,] cubiesCopy = (Transform[,,])_cubies.Clone();
-
-
 
         for (int x = xStart; x <= xStop; x++)
         {
@@ -318,17 +320,3 @@ public class CubeController : MonoBehaviour
   
 }
 
-public enum CubeLayer
-{
-    L,
-    X,
-    R,
-
-    F,
-    Y,
-    B,
-    
-    D,
-    Z,
-    U,
-}
