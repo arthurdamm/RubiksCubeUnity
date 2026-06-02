@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
-using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 
@@ -17,43 +14,16 @@ public class CubeController : MonoBehaviour
     [SerializeField] private float _cubiePadding = 0.1f;
 
     [SerializeField] private float rotationDegreesPerSecond = 30f;
-    [SerializeField] private float lookRotationDegreesPerSecond = 90f;
 
     private CubieGridMapper _cubieGridMapper;
-    
     private Transform[,,] _cubies;
 
     private CubeLayer _layerToRotate;
-    private float _degreesToRotateRemaining = 0f;
-    
-    public bool _isRotating = false;
+    private float _degreesToRotateRemaining;
+    private bool _isRotating;
     
     private Queue<(CubeLayer, float)> _rotationQueue = new();
 
-    private InputAction _upAction;
-    private InputAction _downAction;
-    private InputAction _leftAction;
-    private InputAction _rightAction;
-    private InputAction _forwardAction;
-    private InputAction _backAction;
-    private InputAction _faceRotations;
-    private InputAction _counterClockwiseAction;
-    private InputAction _lookAction;
-    private InputAction _resetAction;
-
-    private CubeActions _cubeInputAsset;
-    private CubeActions.GameplayActions _gameplayMap;
-
-
-    void Awake()
-    {
-        _cubeInputAsset = new();
-        _gameplayMap = _cubeInputAsset.Gameplay;
-        _counterClockwiseAction = _gameplayMap.CounterClockwise;
-        _lookAction = _gameplayMap.Look;
-        _resetAction = _gameplayMap.Reset;
-    }
-    
     void Start()
     {
         _cubieBounds = cubiePrefab.GetComponent<MeshFilter>().sharedMesh.bounds;
@@ -66,37 +36,6 @@ public class CubeController : MonoBehaviour
         collider.size = _cubieGridMapper.CubeSize();
 
         TryDequeRotation();
-    }
-
-    private void OnEnable()
-    {
-        _gameplayMap.Enable();
-        _gameplayMap.Up.performed += OnUpPerformed;
-        _gameplayMap.Down.performed += OnDownPerformed;
-        _gameplayMap.Left.performed += OnLeftPerformed;
-        _gameplayMap.Right.performed += OnRightPerformed;
-        _gameplayMap.Front.performed += OnFrontPerformed;
-        _gameplayMap.Back.performed += OnBackPerformed;
-        _gameplayMap.Reset.performed += OnResetPerformed;
-    }
-    
-    private void OnDisable()
-    {
-        _gameplayMap.Up.performed -= OnUpPerformed;
-        _gameplayMap.Down.performed -= OnDownPerformed;
-        _gameplayMap.Left.performed -= OnLeftPerformed;
-        _gameplayMap.Right.performed -= OnRightPerformed;
-        _gameplayMap.Front.performed -= OnFrontPerformed;
-        _gameplayMap.Back.performed -= OnBackPerformed;
-        _gameplayMap.Reset.performed -= OnResetPerformed;
-        _gameplayMap.Disable();
-    }
-
-
-
-    private void OnDestroy()
-    {
-        _cubeInputAsset.Dispose();
     }
     
     private void SpawnCubies()
@@ -125,34 +64,16 @@ public class CubeController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ReadAndApplyLookInput();
         if (_isRotating)
         {
-            // Logger.LogOnce($"UPDATE {Time.time}");
-            // Debug.Log($"UPDATE {Time.time} {Time.deltaTime}");
-            
             AnimateRotateLayer();
         }
 
     }
-    
-    // Should this method have a better name? Should it change transform?
-    private void ReadAndApplyLookInput()
+    public void OnReset()
     {
-        if (_lookAction.IsPressed())
-        {
-            var inputValue = _lookAction.ReadValue<Vector2>();
-            transform.Rotate(Vector3.up, inputValue.x * lookRotationDegreesPerSecond * Time.deltaTime, Space.World);
-            transform.Rotate(Vector3.right, inputValue.y * lookRotationDegreesPerSecond * Time.deltaTime, Space.World);
-        }
-    }
-
-    private void OnResetPerformed(InputAction.CallbackContext context)
-    {
-        Mouse.current.WarpCursorPosition(Vector2.zero);
         if (_isRotating) return;
         
-        Debug.Log("OnReset()");
         for (int x = 0; x < _cubeSize; x++)
         {
             for (int y = 0; y < _cubeSize; y++)
@@ -164,50 +85,8 @@ public class CubeController : MonoBehaviour
             }
         }
     }
-
-    private void OnUpPerformed(InputAction.CallbackContext context)
-    {
-        Debug.Log($"OnUpPerformed() {context}");
-        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.U, 90 * signMultiplier);
-    }
     
-    private void OnDownPerformed(InputAction.CallbackContext context)
-    {
-        Debug.Log($"OnDownPerformed() {context}");
-        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.D, 90 * signMultiplier);
-    }
-
-    private void OnLeftPerformed(InputAction.CallbackContext context)
-    {
-        Debug.Log($"OnLeftPerformed() {context}");
-        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.L, 90 * signMultiplier);
-    }
-
-    private void OnRightPerformed(InputAction.CallbackContext context)
-    {
-        Debug.Log($"OnRightPerformed() {context}");
-        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.R, 90 * signMultiplier);
-    }
-
-    private void OnFrontPerformed(InputAction.CallbackContext context)
-    {
-        Debug.Log($"OnFrontPerformed() {context}");
-        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.F, 90 * signMultiplier);
-    }
-
-    private void OnBackPerformed(InputAction.CallbackContext context)
-    {
-        Debug.Log($"OnBackPerformed() {context}");
-        int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.B, 90 * signMultiplier);
-    }
-    
-    private void QueueRotateLayer(CubeLayer layer, float degrees)
+    public void QueueRotateLayer(CubeLayer layer, float degrees)
     {
         _rotationQueue.Enqueue((layer, degrees));
         TryDequeRotation();
