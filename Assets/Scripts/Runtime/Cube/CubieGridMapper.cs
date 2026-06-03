@@ -2,46 +2,47 @@ using UnityEngine;
 
 public class CubieGridMapper
 {
-    private readonly float _cubiePadding = 0f;
-    private readonly int _cubeSize = 1;
-    private readonly Bounds _cubieBounds;
+    private readonly CubeLayout _cubeLayout;
 
-    public CubieGridMapper(int cubeSize, float cubiePadding, Bounds cubieBounds)
+    public CubieGridMapper(CubeLayout cubeLayout)
     {
-        _cubeSize = cubeSize;
-        _cubiePadding = cubiePadding;
-        _cubieBounds = cubieBounds;
+        _cubeLayout = cubeLayout;
     }
 
     public Vector3 CubeSize()
     {
         return new Vector3(
-            (_cubieBounds.size.x + _cubiePadding) * _cubeSize,
-            (_cubieBounds.size.y + _cubiePadding) * _cubeSize,
-            (_cubieBounds.size.z + _cubiePadding) * _cubeSize);
+            (_cubeLayout.CubieBounds.size.x + _cubeLayout.CubiePadding) * _cubeLayout.CubeSize,
+            (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding) * _cubeLayout.CubeSize,
+            (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding) * _cubeLayout.CubeSize);
     }
     
     public Vector3 GridIndexToLocalPosition(Vector3Int point)
     {
         return new Vector3(
-            (point.x - _cubeSize / 2) * (_cubieBounds.size.x + _cubiePadding),
-            (point.z - _cubeSize / 2) * (_cubieBounds.size.y + _cubiePadding),
-            (point.y - _cubeSize / 2) * (_cubieBounds.size.z + _cubiePadding));
+            (point.x - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.x + _cubeLayout.CubiePadding),
+            (point.z - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding),
+            (point.y - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding));
     }
 
     public Vector3Int LocalPositionToGridIndex(Vector3 point)
     {
-        Debug.Log($"LocalToIndex() cubeSize: {_cubeSize}, {_cubeSize / 2}");
+        Debug.Log($"LocalToIndex() cubeSize: {_cubeLayout.CubeSize}, {_cubeLayout.CubeSize / 2}");
         return new Vector3Int(
-            Mathf.RoundToInt(point.x / (_cubieBounds.size.x + _cubiePadding) + _cubeSize / 2),
-            Mathf.RoundToInt(point.z / (_cubieBounds.size.z + _cubiePadding) + _cubeSize / 2),
-            Mathf.RoundToInt(point.y / (_cubieBounds.size.y + _cubiePadding) + _cubeSize / 2));
+            Mathf.RoundToInt(point.x / (_cubeLayout.CubieBounds.size.x + _cubeLayout.CubiePadding) +
+                _cubeLayout.CubeSize / 2),
+            Mathf.RoundToInt(point.z / (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding) +
+                _cubeLayout.CubeSize / 2),
+            Mathf.RoundToInt(point.y / (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding) +
+                _cubeLayout.CubeSize / 2));
 
     }
     
     public (int, int, int, int, int, int) GetStartStopForIteration(CubeLayer layer)
     {
-        int xStart = 0, xStop = _cubeSize - 1, yStart = 0, yStop = _cubeSize - 1, zStart = 0, zStop = _cubeSize - 1;
+        int xStart = 0, xStop = _cubeLayout.CubeSize - 1,
+            yStart = 0, yStop = _cubeLayout.CubeSize - 1,
+            zStart = 0, zStop = _cubeLayout.CubeSize - 1;
         
         switch (layer)
         {
