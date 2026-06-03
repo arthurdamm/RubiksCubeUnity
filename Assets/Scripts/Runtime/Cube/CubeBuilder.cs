@@ -18,6 +18,10 @@ public class CubeBuilder : MonoBehaviour
         var cubeLayout = new CubeLayout(cubeSize, cubiePadding, cubieBounds);
         var cubieGridMapper = new CubieGridMapper(cubeLayout);
         var cubies = SpawnCubies(cubeLayout, cubieGridMapper);
+        
+        // Collider needed for Pointer device raycasts, should this be elsewhere?
+        var collider = GetComponent<BoxCollider>();
+        collider.size = cubieGridMapper.CubeBoundsSize();
 
         return new CubeModel(cubies, cubieGridMapper, transform, rotationDegreesPerSecond);
     }

@@ -9,7 +9,7 @@ public class CubieGridMapper
         _cubeLayout = cubeLayout;
     }
 
-    public Vector3 CubeSize()
+    public Vector3 CubeBoundsSize()
     {
         return new Vector3(
             (_cubeLayout.CubieBounds.size.x + _cubeLayout.CubiePadding) * _cubeLayout.CubeSize,

@@ -8,17 +8,17 @@ using Vector3 = UnityEngine.Vector3;
 public class CubeModel
 {
 
-    private Transform _rootTransform; // maybe should in a controller class
-    private float _rotationDegreesPerSecond; 
+    private readonly Transform _rootTransform; // maybe should in a controller class
+    private readonly float _rotationDegreesPerSecond; 
     
-    private CubieGridMapper _cubieGridMapper;
+    private readonly CubieGridMapper _cubieGridMapper;
     private Transform[,,] _cubies;
 
     private CubeLayer _layerToRotate;
     private float _degreesToRotateRemaining;
     private bool _isRotating;
     
-    private Queue<(CubeLayer, float)> _rotationQueue = new();
+    private readonly Queue<(CubeLayer, float)> _rotationQueue = new();
     
     // CubeModel still needs a CubieGridMapper for working with the indices, but its configuration is injected here
     public CubeModel(Transform[,,] cubies, CubieGridMapper cubieGridMapper, Transform rootTransform, float rotationDegreesPerSecond)

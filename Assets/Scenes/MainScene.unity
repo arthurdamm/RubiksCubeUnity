@@ -444,6 +444,8 @@ GameObject:
   - component: {fileID: 1515947555}
   - component: {fileID: 1515947557}
   - component: {fileID: 1515947558}
+  - component: {fileID: 1515947560}
+  - component: {fileID: 1515947561}
   m_Layer: 0
   m_Name: CubeController
   m_TagString: Untagged
@@ -463,15 +465,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b338e569fa1314771ac5ca01770c9f8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CubeController
-  cubiePrefab: {fileID: 919132149155446097, guid: 509cfb5ad31554dcf89771555fdb7711, type: 3}
-  _cubeSize: 3
-  _cubieBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  _cubiePadding: 0.01
-  rotationDegreesPerSecond: 720
-  lookRotationDegreesPerSecond: 300
-  _isRotating: 0
 --- !u!4 &1515947556
 Transform:
   m_ObjectHideFlags: 0
@@ -522,7 +515,45 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   zoomSpeed: 200
   zoomScale: 1
+  lookRotationDegreesPerSecond: 360
   _cameraZoomDelta: 0
+--- !u!114 &1515947560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61b4ddc09d14708b9a371618700ebc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RubiksCube.Runtime::CubeBuilder
+  cubiePrefab: {fileID: 919132149155446097, guid: 509cfb5ad31554dcf89771555fdb7711, type: 3}
+  cubeSize: 3
+  cubiePadding: 0.01
+  rotationDegreesPerSecond: 720
+--- !u!65 &1515947561
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
