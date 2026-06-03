@@ -32,18 +32,24 @@ public enum CubeAxis
 
 public readonly struct CubeLayerGeneral
 {
-    public CubeLayerGeneral(CubeAxis axis, int offset)
+    public CubeLayerGeneral(CubeAxis axis, int index)
     {
         Axis = axis;
-        Offset = offset;
+        Index = index;
     }
     
     public CubeAxis Axis { get; init; }
-    public int Offset { get; init; }
+    public int Index { get; init; }
 }
 
 public readonly struct CubeLayerRotation
 {
+    public CubeLayerRotation(CubeLayerGeneral layer, float degrees)
+    {
+        Layer = layer;
+        Degrees = degrees;
+    }
+    
     public CubeLayerGeneral Layer { get; init; }
     public float Degrees { get; init; }
 }
