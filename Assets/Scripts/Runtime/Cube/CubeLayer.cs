@@ -41,6 +41,8 @@ public readonly struct CubeLayerGeneral
     }
     
     public CubeAxis Axis { get; init; }
+    
+    // The index of this layer's axis in a cube[x,y,z] grid
     public int Index { get; init; }
 }
 

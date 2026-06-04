@@ -34,5 +34,10 @@ public class CubeController : MonoBehaviour
     {
         _cubeModel.QueueRotateLayer(layer, degrees);
     }
+    
+    public void QueueRotateLayer(CubeLayerGeneral layer, float degrees)
+    {
+        _cubeModel.QueueRotateLayer(layer, degrees);
+    }
 }
 

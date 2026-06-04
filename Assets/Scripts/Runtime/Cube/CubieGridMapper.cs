@@ -62,5 +62,45 @@ public class CubieGridMapper
         return (xStart, xStop, yStart, yStop, zStart, zStop);
     }
 
+    public (int, int, int, int, int, int) GetStartStopForIteration(CubeLayerGeneral layer)
+    {
+        int xStart = 0,
+            xStop = _cubeLayout.CubeSize - 1,
+            yStart = 0,
+            yStop = _cubeLayout.CubeSize - 1,
+            zStart = 0,
+            zStop = _cubeLayout.CubeSize - 1;
+        
+        switch (layer.Axis)
+        {
+            case CubeAxis.X: xStart = xStop = layer.Index; break;
+            case CubeAxis.Y: yStart = yStop = layer.Index; break;
+            case CubeAxis.Z: zStart = zStop = layer.Index; break;
+        }
+        
+        return (xStart, xStop, yStart, yStop, zStart, zStop);
+    }
+    
+    public (int, int, int, int, int, int) GetOppositeCornersInLayer(CubeLayerGeneral layer)
+    {
+        int xStart = 0,
+            xStop = _cubeLayout.CubeSize - 1,
+            yStart = 0,
+            yStop = _cubeLayout.CubeSize - 1,
+            zStart = 0,
+            zStop = _cubeLayout.CubeSize - 1;
+        
+        switch (layer.Axis)
+        {
+            case CubeAxis.X: xStart = xStop = layer.Index; break;
+            case CubeAxis.Y: yStart = yStop = layer.Index; break;
+            case CubeAxis.Z: zStart = zStop = layer.Index; break;
+        }
+        
+        return (xStart, xStop, yStart, yStop, zStart, zStop);
+    }
+    
+    
+
 
 }
