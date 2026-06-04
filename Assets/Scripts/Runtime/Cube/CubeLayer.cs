@@ -25,6 +25,21 @@ public enum CubeLayer
     U,
 }
 
+public enum CubeNotation
+{
+    L,
+    X,
+    R,
+
+    F,
+    Y,
+    B,
+    
+    D,
+    Z,
+    U,
+}
+
 public enum CubeAxis
 {
     X,

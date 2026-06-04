@@ -9,6 +9,16 @@ public class CubeBuilder : MonoBehaviour
     [SerializeField] private float cubiePadding = 0.1f;
 
     [SerializeField] private float rotationDegreesPerSecond = 30f;
+
+    private CubieGridMapper _cubieGridMapper;
+
+    public CubieGridMapper CubieGridMapper
+    {
+        get
+        {
+            return _cubieGridMapper;
+        }
+    }
     
     public CubeModel BuildModel()
     {
@@ -16,14 +26,10 @@ public class CubeBuilder : MonoBehaviour
         Logger.LogFields(new {cubieBounds.center, cubieBounds.size});
 
         var cubeLayout = new CubeLayout(cubeSize, cubiePadding, cubieBounds);
-        var cubieGridMapper = new CubieGridMapper(cubeLayout);
-        var cubies = SpawnCubies(cubeLayout, cubieGridMapper);
+        _cubieGridMapper = new CubieGridMapper(cubeLayout);
+        var cubies = SpawnCubies(cubeLayout, _cubieGridMapper);
         
-        // Collider needed for Pointer device raycasts, should this be elsewhere?
-        var collider = GetComponent<BoxCollider>();
-        collider.size = cubieGridMapper.CubeBoundsSize();
-
-        return new CubeModel(cubies, cubieGridMapper, transform, rotationDegreesPerSecond);
+        return new CubeModel(cubies, _cubieGridMapper, transform, rotationDegreesPerSecond);
     }
     
     private Transform[,,] SpawnCubies(CubeLayout cubeLayout, CubieGridMapper cubieGridMapper)
@@ -37,7 +43,7 @@ public class CubeBuilder : MonoBehaviour
                 for (int z = 0; z < cubeLayout.CubeSize; z++)
                 {
                     Vector3 spawnPosition = cubieGridMapper.GridIndexToLocalPosition(new Vector3Int(x, y, z));
-                    Debug.Log(spawnPosition);
+                    // Debug.Log(spawnPosition);
                     // spawnPosition += transform.position;
                     GameObject cubieGo = Instantiate(cubiePrefab, transform.position, transform.rotation, transform);
                     cubieGo.transform.localPosition = spawnPosition;

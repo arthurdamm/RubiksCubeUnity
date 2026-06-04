@@ -7,7 +7,7 @@ using Vector3 = UnityEngine.Vector3;
 
 
 [RequireComponent(typeof(CubeBuilder))]
-[RequireComponent(typeof(BoxCollider))]
+// [RequireComponent(typeof(BoxCollider))]
 public class CubeController : MonoBehaviour
 {
     private CubeBuilder _cubeBuilder;
@@ -17,6 +17,10 @@ public class CubeController : MonoBehaviour
     {
         _cubeBuilder = GetComponent<CubeBuilder>();
         _cubeModel = _cubeBuilder.BuildModel();
+        
+        // Collider needed for Pointer device raycasts, should this be elsewhere?
+        // var collider = GetComponent<BoxCollider>();
+        // collider.size = _cubeBuilder.CubieGridMapper.CubeBoundsSize();
     }
     
     // Update is called once per frame
@@ -30,14 +34,9 @@ public class CubeController : MonoBehaviour
         _cubeModel.ResetCube(transform.rotation);
     }
     
-    public void QueueRotateLayer(CubeLayer layer, float degrees)
+    public void QueueRotateLayer(CubeNotation layer, float degrees)
     {
-        _cubeModel.QueueRotateLayer(layer, degrees);
-    }
-    
-    public void QueueRotateLayer(CubeLayerGeneral layer, float degrees)
-    {
-        _cubeModel.QueueRotateLayer(layer, degrees);
+        _cubeModel.QueueRotateLayer(_cubeBuilder.CubieGridMapper.CubeNotationToCubeLayer(layer), degrees);
     }
 }
 

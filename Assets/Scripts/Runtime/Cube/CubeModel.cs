@@ -38,7 +38,7 @@ public class CubeModel
     {
         if (_isRotating)
         {
-            AnimateRotateLayer();
+            AnimateRotateLayerGeneral();
         }
 
     }
@@ -59,35 +59,13 @@ public class CubeModel
         }
     }
     
-    public void QueueRotateLayer(CubeLayer layer, float degrees)
-    {
-        _rotationQueue.Enqueue((layer, degrees));
-        TryDequeRotation();
-    }
-    
     public void QueueRotateLayer(CubeLayerGeneral layer, float degrees)
     {
+        Debug.Log($"QueueRotateLayer {layer} {degrees}");
         _rotationQueueGeneral.Enqueue((layer, degrees));
-        TryDequeRotation();
+        TryDequeRotationGeneral();
     }
 
-    private void AnimateRotateLayer()
-    {
-        if (Mathf.Abs(_degreesToRotateRemaining) < 1e-6)
-        {
-            _degreesToRotateRemaining = 0f;
-            _isRotating = false;
-            RemapGridIndicesFromTransformPosition(_layerToRotate);
-            TryDequeRotation();
-            return;
-        }
-    
-        float degreesToRotateNow = Mathf.Min(Mathf.Abs(_degreesToRotateRemaining), Time.deltaTime * _rotationDegreesPerSecond);
-        degreesToRotateNow *= Mathf.Sign(_degreesToRotateRemaining);
-        RotateLayer(_layerToRotate, degreesToRotateNow);
-        _degreesToRotateRemaining -= degreesToRotateNow;
-    }
-    
     private void AnimateRotateLayerGeneral()
     {
         if (Mathf.Abs(_degreesToRotateRemaining) < 1e-6)
@@ -105,20 +83,6 @@ public class CubeModel
         _degreesToRotateRemaining -= degreesToRotateNow;
     }
 
-    private void TryDequeRotation()
-    {
-        // CubeLayerRotation rot = new CubeLayerRotation {
-        //     Layer = new CubeLayerGeneral(CubeAxis.X, 1),
-        //     Degrees = 90f
-        // };
-        
-        if (!_isRotating && _rotationQueue.Count > 0)
-        {
-            (_layerToRotate, _degreesToRotateRemaining) = _rotationQueue.Dequeue();
-            _isRotating = true;
-        }
-    }
-    
     private void TryDequeRotationGeneral()
     {
         // CubeLayerRotation rot = new CubeLayerRotation {
@@ -128,6 +92,7 @@ public class CubeModel
         
         if (!_isRotating && _rotationQueueGeneral.Count > 0)
         {
+            // Debug.Log("DEQUEING");
             (_layerToRotateGeneral, _degreesToRotateRemaining) = _rotationQueueGeneral.Dequeue();
             _isRotating = true;
         }
@@ -141,7 +106,6 @@ public class CubeModel
     private void RotateLayer(CubeLayerGeneral layer, float degrees, Vector3 worldCenter, Vector3 localAxis)
     {
         int xStart, xStop, yStart, yStop, zStart, zStop;
-
         (xStart, xStop, yStart, yStop, zStart, zStop) = _cubieGridMapper.GetStartStopForIteration(layer);
         
         var dummyAxis = new GameObject("DummyAxis");
@@ -157,6 +121,7 @@ public class CubeModel
             {
                 for (int z = zStart; z <= zStop; z++)
                 {
+                    // Debug.Log($"Rotating [{x},{y},{z}");
                     RotateCubie(_cubies[x, y, z], degrees, worldCenter, localAxis, dummyAxis.transform, dummyPoint.transform);
                 }
             }
@@ -200,80 +165,6 @@ public class CubeModel
         return (_cubies[xStart, yStart, zStart].position + _cubies[xStop, yStop, zStop].position) / 2;
     }
     
-    private void RotateLayer(CubeLayer layer, float degrees)
-    {
-        int xStart, xStop, yStart, yStop, zStart, zStop;
-
-        (xStart, xStop, yStart, yStop, zStart, zStop) = _cubieGridMapper.GetStartStopForIteration(layer);
-
-        Transform centerTransform = _cubies[(xStart + xStop) / 2, (yStart + yStop) / 2, (zStart + zStop) / 2];
-        Vector3 center = centerTransform.position;
-        Vector3 axis = Vector3.up;
-
-        Func<Transform, Vector3> f = null;
-
-        switch ((int)layer / 3) // TODO: fix
-        {
-            case 0 : axis = _rootTransform.right;
-                f = (t) => t.right; break;
-            case 1 : axis = _rootTransform.forward; f = (t) => t.forward; break;
-            case 2 : axis = _rootTransform.up; f = (t) => t.up; break;
-        }
-
-        var dummyAxis = new GameObject("DummyAxis");
-        var dummyPoint = new GameObject("DummyPoint");
-        dummyAxis.transform.position = _rootTransform.position;
-        dummyPoint.transform.position = _rootTransform.position;
-        dummyAxis.transform.SetParent(_rootTransform);
-        dummyPoint.transform.SetParent(dummyAxis.transform);
-        
-        // I'm using this triple-iteration to avoid allocating a list
-        for (int x = xStart; x <= xStop; x++)
-        {
-            for (int y = yStart; y <= yStop; y++)
-            {
-                for (int z = zStart; z <= zStop; z++)
-                {
-                    // _cubies[x, y, z].RotateAround(center, axis, degrees);
-                    Transform t = _cubies[x, y, z];
-                    dummyAxis.transform.position = center;
-                    dummyAxis.transform.rotation = Quaternion.identity;
-                    
-                    dummyPoint.transform.position = t.position;
-                    
-                    dummyAxis.transform.Rotate(axis, degrees, Space.Self);
-                    
-                    
-                    t.position = dummyPoint.transform.position;
-                    t.Rotate(t.InverseTransformDirection(axis), degrees, Space.Self);
-                }
-            }
-        }
-
-    }
-    
-    private void RemapGridIndicesFromTransformPosition(CubeLayer layer)
-    {
-        int xStart, xStop, yStart, yStop, zStart, zStop;
-
-        (xStart, xStop, yStart, yStop, zStart, zStop) = _cubieGridMapper.GetStartStopForIteration(layer);
-        Transform[,,] cubiesCopy = (Transform[,,])_cubies.Clone();
-
-        for (int x = xStart; x <= xStop; x++)
-        {
-            for (int y = yStart; y <= yStop; y++)
-            {
-                for (int z = zStart; z <= zStop; z++)
-                {
-                    Vector3Int point = _cubieGridMapper.LocalPositionToGridIndex(_cubies[x, y, z].localPosition);
-                    // Debug.Log($"copying [{x},{y},{z}] at local: {_cubies[x, y, z].localPosition}, world: {_cubies[x, y, z].position}, TO: [{point.x}, {point.y}, {point.z}]");
-                    cubiesCopy[point.x, point.y, point.z] = _cubies[x, y, z];
-                }
-            }
-        }
-        _cubies = cubiesCopy;
-    }
-    
     private void RemapGridIndicesFromTransformPosition(CubeLayerGeneral layer)
     {
         int xStart, xStop, yStart, yStop, zStart, zStop;
@@ -295,7 +186,6 @@ public class CubeModel
         }
         _cubies = cubiesCopy;
     }
-
   
 }
 

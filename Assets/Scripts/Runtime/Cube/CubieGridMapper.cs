@@ -21,19 +21,20 @@ public class CubieGridMapper
     {
         return new Vector3(
             (point.x - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.x + _cubeLayout.CubiePadding),
-            (point.z - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding),
-            (point.y - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding));
+            (point.y - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding),
+            (point.z - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding)
+            );
     }
 
     public Vector3Int LocalPositionToGridIndex(Vector3 point)
     {
-        Debug.Log($"LocalToIndex() cubeSize: {_cubeLayout.CubeSize}, {_cubeLayout.CubeSize / 2}");
+        // Debug.Log($"LocalToIndex() cubeSize: {_cubeLayout.CubeSize}, {_cubeLayout.CubeSize / 2}");
         return new Vector3Int(
             Mathf.RoundToInt(point.x / (_cubeLayout.CubieBounds.size.x + _cubeLayout.CubiePadding) +
                 _cubeLayout.CubeSize / 2),
-            Mathf.RoundToInt(point.z / (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding) +
-                _cubeLayout.CubeSize / 2),
             Mathf.RoundToInt(point.y / (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding) +
+                _cubeLayout.CubeSize / 2),
+            Mathf.RoundToInt(point.z / (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding) +
                 _cubeLayout.CubeSize / 2));
 
     }
@@ -100,7 +101,31 @@ public class CubieGridMapper
         return (xStart, xStop, yStart, yStop, zStart, zStop);
     }
     
-    
+    public CubeLayerGeneral CubeNotationToCubeLayer(CubeNotation layer)
+    {
+        switch (layer)
+        {
+            case CubeNotation.L:
+                return new CubeLayerGeneral(CubeAxis.X, 0);
+            case CubeNotation.X:
+                return new CubeLayerGeneral(CubeAxis.X, _cubeLayout.CubeSize / 2);
+            case CubeNotation.R:
+                return new CubeLayerGeneral(CubeAxis.X, _cubeLayout.CubeSize - 1);
+            case CubeNotation.F:
+                return new CubeLayerGeneral(CubeAxis.Z, 0);
+            case CubeNotation.Y:
+                return new CubeLayerGeneral(CubeAxis.Z, _cubeLayout.CubeSize / 2);
+            case CubeNotation.B:
+                return new CubeLayerGeneral(CubeAxis.Z, _cubeLayout.CubeSize - 1);
+            case CubeNotation.D:
+                return new CubeLayerGeneral(CubeAxis.Y, 0);
+            case CubeNotation.Z:
+                return new CubeLayerGeneral(CubeAxis.Y, _cubeLayout.CubeSize / 2);
+            case CubeNotation.U:
+                return new CubeLayerGeneral(CubeAxis.Y, _cubeLayout.CubeSize - 1);
+        }
+        return new CubeLayerGeneral(CubeAxis.X, 0);
+    }
 
 
 }
