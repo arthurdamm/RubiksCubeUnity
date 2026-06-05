@@ -1,28 +1,12 @@
-// IsExternalInit definition is necessary to allow "init" prop accessors
-// https://docs.unity3d.com/6000.3/Documentation/Manual/csharp-compiler.html
 using System.ComponentModel;
 using UnityEngine;
 
+// IsExternalInit definition is necessary to allow "init" prop accessors in Unity C#
+// https://docs.unity3d.com/6000.3/Documentation/Manual/csharp-compiler.html
 namespace System.Runtime.CompilerServices
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    internal class IsExternalInit{}
-}
-
-
-public enum CubeLayer
-{
-    L,
-    X,
-    R,
-
-    F,
-    Y,
-    B,
-    
-    D,
-    Z,
-    U,
+    internal class IsExternalInit {}
 }
 
 public enum CubeNotation
@@ -47,9 +31,9 @@ public enum CubeAxis
     Z
 }
 
-public readonly struct CubeLayerGeneral
+public readonly struct CubeLayer
 {
-    public CubeLayerGeneral(CubeAxis axis, int index)
+    public CubeLayer(CubeAxis axis, int index)
     {
         Axis = axis;
         Index = index;
@@ -63,13 +47,13 @@ public readonly struct CubeLayerGeneral
 
 public readonly struct CubeLayerRotation
 {
-    public CubeLayerRotation(CubeLayerGeneral layer, float degrees)
+    public CubeLayerRotation(CubeLayer layer, float degrees)
     {
         Layer = layer;
         Degrees = degrees;
     }
     
-    public CubeLayerGeneral Layer { get; init; }
+    public CubeLayer Layer { get; init; }
     public float Degrees { get; init; }
 }
 

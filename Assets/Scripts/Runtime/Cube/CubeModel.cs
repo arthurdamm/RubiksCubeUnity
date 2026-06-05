@@ -18,13 +18,11 @@ public class CubeModel
     private Transform[,,] _cubies;
 
     private CubeLayer _layerToRotate;
-    private CubeLayerGeneral _layerToRotateGeneral;
     
     private float _degreesToRotateRemaining;
     private bool _isRotating;
     
     private readonly Queue<(CubeLayer, float)> _rotationQueue = new();
-    private readonly Queue<(CubeLayerGeneral, float)> _rotationQueueGeneral = new();
     
     // CubeModel still needs a CubieGridMapper for working with the indices, but its configuration is injected here
     public CubeModel(Transform[,,] cubies, CubieGridMapper cubieGridMapper, Transform rootTransform, float rotationDegreesPerSecond)
@@ -40,7 +38,7 @@ public class CubeModel
     {
         if (_isRotating)
         {
-            AnimateRotateLayerGeneral();
+            AnimateRotateLayer();
         }
 
     }
@@ -61,51 +59,45 @@ public class CubeModel
         }
     }
     
-    public void QueueRotateLayer(CubeLayerGeneral layer, float degrees)
+    public void QueueRotateLayer(CubeLayer layer, float degrees)
     {
         Debug.Log($"QueueRotateLayer {layer} {degrees}");
-        _rotationQueueGeneral.Enqueue((layer, degrees));
-        TryDequeRotationGeneral();
+        _rotationQueue.Enqueue((layer, degrees));
+        TryDequeRotation();
     }
 
-    private void AnimateRotateLayerGeneral()
+    private void AnimateRotateLayer()
     {
         if (Mathf.Abs(_degreesToRotateRemaining) < 1e-6)
         {
             _degreesToRotateRemaining = 0f;
             _isRotating = false;
-            RemapGridIndicesFromTransformPosition(_layerToRotateGeneral);
-            TryDequeRotationGeneral();
+            RemapGridIndicesFromTransformPosition(_layerToRotate);
+            TryDequeRotation();
             return;
         }
     
         float degreesToRotateNow = Mathf.Min(Mathf.Abs(_degreesToRotateRemaining), Time.deltaTime * _rotationDegreesPerSecond);
         degreesToRotateNow *= Mathf.Sign(_degreesToRotateRemaining);
-        RotateLayer(_layerToRotateGeneral, degreesToRotateNow);
+        RotateLayer(_layerToRotate, degreesToRotateNow);
         _degreesToRotateRemaining -= degreesToRotateNow;
     }
 
-    private void TryDequeRotationGeneral()
+    private void TryDequeRotation()
     {
-        // CubeLayerRotation rot = new CubeLayerRotation {
-        //     Layer = new CubeLayerGeneral(CubeAxis.X, 1),
-        //     Degrees = 90f
-        // };
-        
-        if (!_isRotating && _rotationQueueGeneral.Count > 0)
+        if (!_isRotating && _rotationQueue.Count > 0)
         {
-            // Debug.Log("DEQUEING");
-            (_layerToRotateGeneral, _degreesToRotateRemaining) = _rotationQueueGeneral.Dequeue();
+            (_layerToRotate, _degreesToRotateRemaining) = _rotationQueue.Dequeue();
             _isRotating = true;
         }
     }
     
-    private void RotateLayer(CubeLayerGeneral layer, float degrees)
+    private void RotateLayer(CubeLayer layer, float degrees)
     {
         RotateLayer(layer, degrees, LayerToWorldCenter(layer), LayerToLocalAxisRotation(layer));
     }
 
-    private void RotateLayer(CubeLayerGeneral layer, float degrees, Vector3 worldCenter, Vector3 localAxis)
+    private void RotateLayer(CubeLayer layer, float degrees, Vector3 worldCenter, Vector3 localAxis)
     {
         int xStart, xStop, yStart, yStop, zStart, zStop;
         (xStart, xStop, yStart, yStop, zStart, zStop) = _cubieGridMapper.GetStartStopForIteration(layer);
@@ -123,16 +115,13 @@ public class CubeModel
             {
                 for (int z = zStart; z <= zStop; z++)
                 {
-                    // Debug.Log($"Rotating [{x},{y},{z}");
                     RotateCubie(_cubies[x, y, z], degrees, worldCenter, localAxis, dummyAxis.transform, dummyPoint.transform);
                 }
             }
         }
-
+        
         Object.Destroy(dummyAxis);
         Object.Destroy(dummyPoint);
-
-
     }
 
     private void RotateCubie(Transform cubie, float degrees, Vector3 worldCenter, Vector3 localAxis, Transform dummyAxis, Transform dummyPoint)
@@ -146,7 +135,7 @@ public class CubeModel
         cubie.Rotate(cubie.InverseTransformDirection(localAxis), degrees, Space.Self);
     }
 
-    private Vector3 LayerToLocalAxisRotation(CubeLayerGeneral layer)
+    private Vector3 LayerToLocalAxisRotation(CubeLayer layer)
     {
         return layer.Axis switch
         {
@@ -157,7 +146,7 @@ public class CubeModel
         };
     }
 
-    private Vector3 LayerToWorldCenter(CubeLayerGeneral layer)
+    private Vector3 LayerToWorldCenter(CubeLayer layer)
     {
         /*
          * For now average two opposing corners in the layer,
@@ -170,7 +159,7 @@ public class CubeModel
         return (_cubies[xStart, yStart, zStart].position + _cubies[xStop, yStop, zStop].position) / 2;
     }
     
-    private void RemapGridIndicesFromTransformPosition(CubeLayerGeneral layer)
+    private void RemapGridIndicesFromTransformPosition(CubeLayer layer)
     {
         int xStart, xStop, yStart, yStop, zStart, zStop;
 

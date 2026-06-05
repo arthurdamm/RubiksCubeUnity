@@ -1,17 +1,19 @@
-using System;
 using UnityEngine;
+using UnityEditor;
 
 public class LookAt : MonoBehaviour
 {
     [SerializeField] private Transform target;
 
-
+#if UNITY_EDITOR
     private void OnValidate()
     {
         if (target)
         {
             transform.LookAt(target);
-            UnityEditor.EditorApplication.delayCall += () => DestroyImmediate(this);
+            EditorApplication.delayCall += () => DestroyImmediate(this);
         }
     }
+#endif
+    
 }
