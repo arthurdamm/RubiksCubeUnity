@@ -20,9 +20,9 @@ public class CubieGridMapper
     public Vector3 GridIndexToLocalPosition(Vector3Int point)
     {
         return new Vector3(
-            (point.x - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.x + _cubeLayout.CubiePadding),
-            (point.y - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding),
-            (point.z - _cubeLayout.CubeSize / 2) * (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding)
+            (point.x - _cubeLayout.CubeSize / 2f + .5f) * (_cubeLayout.CubieBounds.size.x + _cubeLayout.CubiePadding),
+            (point.y - _cubeLayout.CubeSize / 2f + .5f) * (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding),
+            (point.z - _cubeLayout.CubeSize / 2f + .5f) * (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding)
             );
     }
 
@@ -31,11 +31,11 @@ public class CubieGridMapper
         // Debug.Log($"LocalToIndex() cubeSize: {_cubeLayout.CubeSize}, {_cubeLayout.CubeSize / 2}");
         return new Vector3Int(
             Mathf.RoundToInt(point.x / (_cubeLayout.CubieBounds.size.x + _cubeLayout.CubiePadding) +
-                _cubeLayout.CubeSize / 2),
+                _cubeLayout.CubeSize / 2f - .5f),
             Mathf.RoundToInt(point.y / (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding) +
-                _cubeLayout.CubeSize / 2),
+                _cubeLayout.CubeSize / 2f - .5f),
             Mathf.RoundToInt(point.z / (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding) +
-                _cubeLayout.CubeSize / 2));
+                _cubeLayout.CubeSize / 2f - .5f));
 
     }
     

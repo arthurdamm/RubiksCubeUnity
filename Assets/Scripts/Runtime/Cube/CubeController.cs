@@ -7,7 +7,7 @@ using Vector3 = UnityEngine.Vector3;
 
 
 [RequireComponent(typeof(CubeBuilder))]
-// [RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(BoxCollider))]
 public class CubeController : MonoBehaviour
 {
     private CubeBuilder _cubeBuilder;
@@ -19,8 +19,8 @@ public class CubeController : MonoBehaviour
         _cubeModel = _cubeBuilder.BuildModel();
         
         // Collider needed for Pointer device raycasts, should this be elsewhere?
-        // var collider = GetComponent<BoxCollider>();
-        // collider.size = _cubeBuilder.CubieGridMapper.CubeBoundsSize();
+        var collider = GetComponent<BoxCollider>();
+        collider.size = _cubeBuilder.CubieGridMapper.CubeBoundsSize();
     }
     
     // Update is called once per frame
