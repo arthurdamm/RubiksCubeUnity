@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
+using Object = UnityEngine.Object;
 
 
 public class CubeModel
@@ -126,6 +128,9 @@ public class CubeModel
                 }
             }
         }
+
+        Object.Destroy(dummyAxis);
+        Object.Destroy(dummyPoint);
 
 
     }

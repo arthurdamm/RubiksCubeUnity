@@ -425,13 +425,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1023545059}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.12527338, y: -0.86317396, z: 0.26004025, w: 0.41426593}
-  m_LocalPosition: {x: 7.23, y: 6.15, z: 5.8}
+  m_LocalRotation: {x: 0.397519, y: 0.185094, z: 0.08308136, w: -0.89488345}
+  m_LocalPosition: {x: -18.379728, y: 14.564514, z: -19.081844}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -43.429, y: -30.747, z: -81.675}
 --- !u!1 &1515947554
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,9 +443,9 @@ GameObject:
   - component: {fileID: 1515947556}
   - component: {fileID: 1515947555}
   - component: {fileID: 1515947557}
-  - component: {fileID: 1515947558}
   - component: {fileID: 1515947560}
   - component: {fileID: 1515947561}
+  - component: {fileID: 1515947562}
   m_Layer: 0
   m_Name: CubeController
   m_TagString: Untagged
@@ -473,13 +473,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1515947554}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.47295007, y: -0.15795283, z: 0.27458486, w: 0.8221754}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -43.706, y: -45.937, z: 56.229}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1515947557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,7 +487,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1515947554}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9338dc2aa3e864b85970e828dec81b68, type: 3}
   m_Name: 
@@ -498,25 +498,6 @@ MonoBehaviour:
   _localDirectionMatchingCameraUp: {x: 0, y: 0, z: 0}
   _worldDirectionMatchingCameraBack: {x: 0, y: 0, z: 0}
   _localDirectionMatchingCameraBack: {x: 0, y: 0, z: 0}
---- !u!114 &1515947558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1515947554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbb17d470ed98493fae50c2b0da69d5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: RubiksCube.Runtime::UserController
-  mainCamera: {fileID: 1023545062}
-  rayLength: 20
-  position: {x: 0, y: 0, z: 0}
-  zoomSpeed: 200
-  zoomScale: 1
-  lookRotationDegreesPerSecond: 360
-  _cameraZoomDelta: 0
 --- !u!114 &1515947560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -530,9 +511,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: RubiksCube.Runtime::CubeBuilder
   cubiePrefab: {fileID: 919132149155446097, guid: 509cfb5ad31554dcf89771555fdb7711, type: 3}
-  cubeSize: 3
-  cubiePadding: 0.01
-  rotationDegreesPerSecond: 720
+  cubeSize: 2
+  cubiePadding: 0
+  rotationDegreesPerSecond: 360
 --- !u!65 &1515947561
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -554,6 +535,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1515947562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7780fb1fa5cc42d8a594c6532099b0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RubiksCube.Runtime::UserControllerGeneral
+  mainCamera: {fileID: 1023545062}
+  rayLength: 5
+  position: {x: 0, y: 0, z: 0}
+  zoomSpeed: 200
+  zoomScale: 1
+  lookRotationDegreesPerSecond: 360
+  _cameraZoomDelta: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
