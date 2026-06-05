@@ -295,7 +295,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1023545059
+--- !u!1 &1515947554
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -303,24 +303,145 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1023545063}
-  - component: {fileID: 1023545062}
-  - component: {fileID: 1023545061}
-  - component: {fileID: 1023545060}
+  - component: {fileID: 1515947556}
+  - component: {fileID: 1515947555}
+  - component: {fileID: 1515947557}
+  - component: {fileID: 1515947560}
+  - component: {fileID: 1515947561}
+  - component: {fileID: 1515947562}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: CubeController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1023545060
+--- !u!114 &1515947555
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023545059}
+  m_GameObject: {fileID: 1515947554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b338e569fa1314771ac5ca01770c9f8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CubeController
+--- !u!4 &1515947556
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1515947557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9338dc2aa3e864b85970e828dec81b68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RubiksCube.Runtime::FaceIdentifier
+  cameraTransform: {fileID: 0}
+  gizmoLength: 10
+  _worldDirectionMatchingCameraUp: {x: 0, y: 0, z: 0}
+  _localDirectionMatchingCameraUp: {x: 0, y: 0, z: 0}
+  _worldDirectionMatchingCameraBack: {x: 0, y: 0, z: 0}
+  _localDirectionMatchingCameraBack: {x: 0, y: 0, z: 0}
+--- !u!114 &1515947560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61b4ddc09d14708b9a371618700ebc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RubiksCube.Runtime::CubeBuilder
+  cubiePrefab: {fileID: 919132149155446097, guid: 509cfb5ad31554dcf89771555fdb7711, type: 3}
+  cubeSize: 2
+  cubiePadding: 0
+  rotationDegreesPerSecond: 360
+--- !u!65 &1515947561
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1515947562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7780fb1fa5cc42d8a594c6532099b0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RubiksCube.Runtime::UserControllerGeneral
+  mainCamera: {fileID: 1616759287}
+  rayLength: 5
+  position: {x: 0, y: 0, z: 0}
+  zoomSpeed: 200
+  zoomScale: 1
+  lookRotationDegreesPerSecond: 360
+--- !u!1 &1616759284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1616759288}
+  - component: {fileID: 1616759287}
+  - component: {fileID: 1616759286}
+  - component: {fileID: 1616759285}
+  m_Layer: 0
+  m_Name: MainCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1616759285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1616759284}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
@@ -358,21 +479,21 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!81 &1023545061
+--- !u!81 &1616759286
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023545059}
+  m_GameObject: {fileID: 1616759284}
   m_Enabled: 1
---- !u!20 &1023545062
+--- !u!20 &1616759287
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023545059}
+  m_GameObject: {fileID: 1616759284}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -417,112 +538,21 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1023545063
+--- !u!4 &1616759288
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023545059}
+  m_GameObject: {fileID: 1616759284}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.12527338, y: -0.86317396, z: 0.26004025, w: 0.41426593}
-  m_LocalPosition: {x: 7.23, y: 6.15, z: 5.8}
+  m_LocalRotation: {x: 0.26217046, y: 0.14607878, z: -0.040183995, w: 0.9530545}
+  m_LocalPosition: {x: -2.5160244, y: 5, z: -8.014766}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1515947554
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1515947556}
-  - component: {fileID: 1515947555}
-  - component: {fileID: 1515947557}
-  - component: {fileID: 1515947558}
-  m_Layer: 0
-  m_Name: CubeController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1515947555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1515947554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b338e569fa1314771ac5ca01770c9f8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CubeController
-  cubiePrefab: {fileID: 919132149155446097, guid: 509cfb5ad31554dcf89771555fdb7711, type: 3}
-  _cubeSize: 3
-  _cubieBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  _cubiePadding: 0.01
-  rotationDegreesPerSecond: 720
-  lookRotationDegreesPerSecond: 300
-  _isRotating: 0
---- !u!4 &1515947556
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1515947554}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.47295007, y: -0.15795283, z: 0.27458486, w: 0.8221754}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -43.706, y: -45.937, z: 56.229}
---- !u!114 &1515947557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1515947554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9338dc2aa3e864b85970e828dec81b68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: RubiksCube.Runtime::FaceIdentifier
-  cameraTransform: {fileID: 1023545063}
-  gizmoLength: 10
-  _worldDirectionMatchingCameraUp: {x: 0, y: 0, z: 0}
-  _localDirectionMatchingCameraUp: {x: 0, y: 0, z: 0}
-  _worldDirectionMatchingCameraBack: {x: 0, y: 0, z: 0}
-  _localDirectionMatchingCameraBack: {x: 0, y: 0, z: 0}
---- !u!114 &1515947558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1515947554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbb17d470ed98493fae50c2b0da69d5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: RubiksCube.Runtime::UserController
-  mainCamera: {fileID: 1023545062}
-  rayLength: 20
-  position: {x: 0, y: 0, z: 0}
-  zoomSpeed: 200
-  zoomScale: 1
-  _cameraZoomDelta: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -530,4 +560,4 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 1515947556}
-  - {fileID: 1023545063}
+  - {fileID: 1616759288}

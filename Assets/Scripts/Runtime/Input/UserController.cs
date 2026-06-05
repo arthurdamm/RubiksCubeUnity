@@ -31,9 +31,8 @@ public class UserController : MonoBehaviour
     private InputAction _faceRotations;
     private InputAction _counterClockwiseAction;
     private InputAction _lookAction;
-    private InputAction _resetAction;
 
-    public float _cameraZoomDelta;
+    private float _cameraZoomDelta;
     
     void Awake()
     {
@@ -43,7 +42,6 @@ public class UserController : MonoBehaviour
         _gameplayMap = _cubeActions.Gameplay;
         _counterClockwiseAction = _gameplayMap.CounterClockwise;
         _lookAction = _gameplayMap.Look;
-        _resetAction = _gameplayMap.Reset;
         
         _pointerAction = _cubeActions.Pointer.Pointer;
         _clickAction = _cubeActions.Pointer.Click;
@@ -117,7 +115,7 @@ public class UserController : MonoBehaviour
         float zoomAmount = zoomSpeed * Time.deltaTime;
         zoomAmount = Mathf.Min(zoomAmount, absDelta) * Mathf.Sign(_cameraZoomDelta);
         mainCamera.transform.Translate(Vector3.forward * zoomAmount, Space.Self);
-        Debug.Log($"Translate {zoomAmount}");
+        // Debug.Log($"Translate {zoomAmount}");
         _cameraZoomDelta -= zoomAmount;
 
     }
@@ -138,7 +136,7 @@ public class UserController : MonoBehaviour
         
     }
     
-    private void QueueRotateLayer(CubeLayer layer, float degrees)
+    private void QueueRotateLayer(CubeNotation layer, float degrees)
     {
         _cubeController.QueueRotateLayer(layer, degrees);
     }
@@ -150,50 +148,44 @@ public class UserController : MonoBehaviour
     
     private void OnUpPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"OnUpPerformed() {context}");
+        // Debug.Log($"OnUpPerformed() {context}");
         int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.U, 90 * signMultiplier);
+        QueueRotateLayer(CubeNotation.U, 90 * signMultiplier);
     }
     
     private void OnDownPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"OnDownPerformed() {context}");
+        // Debug.Log($"OnDownPerformed() {context}");
         int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.D, 90 * signMultiplier);
+        QueueRotateLayer(CubeNotation.D, 90 * signMultiplier);
     }
 
     private void OnLeftPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"OnLeftPerformed() {context}");
+        // Debug.Log($"OnLeftPerformed() {context}");
         int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.L, 90 * signMultiplier);
+        QueueRotateLayer(CubeNotation.L, 90 * signMultiplier);
     }
 
     private void OnRightPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"OnRightPerformed() {context}");
+        // Debug.Log($"OnRightPerformed() {context}");
         int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.R, 90 * signMultiplier);
+        QueueRotateLayer(CubeNotation.R, 90 * signMultiplier);
     }
 
     private void OnFrontPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"OnFrontPerformed() {context}");
+        // Debug.Log($"OnFrontPerformed() {context}");
         int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.F, 90 * signMultiplier);
+        QueueRotateLayer(CubeNotation.F, 90 * signMultiplier);
     }
 
     private void OnBackPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"OnBackPerformed() {context}");
+        // Debug.Log($"OnBackPerformed() {context}");
         int signMultiplier = _counterClockwiseAction.IsPressed() ? -1 : 1;
-        QueueRotateLayer(CubeLayer.B, 90 * signMultiplier);
-    }
-    
-    private void ReadPointerInput()
-    {
-        var inputValue = _pointerAction.ReadValue<Vector2>();
-        Debug.Log($"ReadValue Pointer: {inputValue}");
+        QueueRotateLayer(CubeNotation.B, 90 * signMultiplier);
     }
     
     private void OnDestroy()
