@@ -14,10 +14,7 @@ public class CubeBuilder : MonoBehaviour
 
     public CubieGridMapper CubieGridMapper
     {
-        get
-        {
-            return _cubieGridMapper;
-        }
+        get { return _cubieGridMapper; }
     }
     
     public CubeModel BuildModel()

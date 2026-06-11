@@ -6,12 +6,14 @@ public class UserController : MonoBehaviour
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private float rayLength = 5f;
-    [SerializeField] private Vector3 position;
 
     [SerializeField] private float zoomSpeed = 200f;
     [SerializeField] private float zoomScale = 1f;
     
     [SerializeField] private float lookRotationDegreesPerSecond = 90f;
+    
+    [Header("Drag")]
+    [SerializeField] private float dragThreshold = 20f;
 
     private CubeController _cubeController;
     
@@ -28,29 +30,29 @@ public class UserController : MonoBehaviour
     private InputAction _rightAction;
     private InputAction _forwardAction;
     private InputAction _backAction;
-    private InputAction _faceRotations;
     private InputAction _counterClockwiseAction;
     private InputAction _lookAction;
 
     private float _cameraZoomDelta;
+
+    private BasicDrag _drag;
     
     void Awake()
     {
+        // Debug.Log("UserController::Awake()");
         _cubeController = GetComponent<CubeController>();
             
+        
         _cubeActions = new ();
         _gameplayMap = _cubeActions.Gameplay;
         _counterClockwiseAction = _gameplayMap.CounterClockwise;
         _lookAction = _gameplayMap.Look;
         
+        _drag = new BasicDrag(_cubeActions, dragThreshold);
+        
         _pointerAction = _cubeActions.Pointer.Pointer;
         _clickAction = _cubeActions.Pointer.Click;
         _zoomAction = _cubeActions.Pointer.Zoom;
-    }
-    
-    void Start()
-    {
-        position = new Vector3(Screen.width / 4, Screen.height / 3);
     }
     
     void Update()
@@ -61,6 +63,7 @@ public class UserController : MonoBehaviour
     
     private void OnEnable()
     {
+        // Debug.Log("UserController::OnEnable()");
         _gameplayMap.Up.performed += OnUpPerformed;
         _gameplayMap.Down.performed += OnDownPerformed;
         _gameplayMap.Left.performed += OnLeftPerformed;
@@ -78,6 +81,7 @@ public class UserController : MonoBehaviour
     
     private void OnDisable()
     {
+        // Debug.Log("UserController::OnDisable()");
         _gameplayMap.Disable();
         _gameplayMap.Up.performed -= OnUpPerformed;
         _gameplayMap.Down.performed -= OnDownPerformed;
@@ -190,7 +194,9 @@ public class UserController : MonoBehaviour
     
     private void OnDestroy()
     {
+        // Debug.Log("UserController::OnDestroy()");
         _cubeActions.Dispose();
+        _drag = null;
     }
 
     private void OnZoomPerformed(InputAction.CallbackContext context)
@@ -203,14 +209,14 @@ public class UserController : MonoBehaviour
 
     private void OnPointerPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"OnPointer: {_clickAction.IsPressed()}");
+        // Debug.Log($"OnPointer: {_clickAction.IsPressed()}");
         
     }
 
     private void OnClickPerformed(InputAction.CallbackContext context)
     {
-        var pointerPosition = _pointerAction.ReadValue<Vector2>();
-        Debug.Log($"OnClickPerformed({_clickAction.IsPressed()}) at {pointerPosition} : {context}");
-        CastRay(pointerPosition);
+        // var pointerPosition = _pointerAction.ReadValue<Vector2>();
+        // Debug.Log($"OnClickPerformed({_clickAction.IsPressed()}) at {pointerPosition} : {context}");
+        // CastRay(pointerPosition);
     }
 }

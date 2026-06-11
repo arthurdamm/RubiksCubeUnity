@@ -355,7 +355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9338dc2aa3e864b85970e828dec81b68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: RubiksCube.Runtime::FaceIdentifier
-  cameraTransform: {fileID: 0}
+  cameraTransform: {fileID: 1616759288}
   gizmoLength: 10
   _worldDirectionMatchingCameraUp: {x: 0, y: 0, z: 0}
   _localDirectionMatchingCameraUp: {x: 0, y: 0, z: 0}
