@@ -52,12 +52,12 @@
     <Compile Include="Assets/Scripts/Runtime/Debug/ScreenRay.cs" />
     <Compile Include="Assets/Scripts/Runtime/Library/Rotations.cs" />
     <Compile Include="Assets/Scripts/Runtime/Learn/CubeRotationFromManual.cs" />
+    <Compile Include="Assets/Scripts/Runtime/Input/PointerDragTracker.cs" />
     <Compile Include="Assets/Scripts/Runtime/Cube/CubeController.cs" />
     <Compile Include="Assets/Scripts/Runtime/Cube/CubeModel.cs" />
     <Compile Include="Assets/Scripts/Runtime/Cube/CubeLayer.cs" />
     <Compile Include="Assets/Scripts/Runtime/Cube/CubeBuilder.cs" />
     <Compile Include="Assets/Scripts/Runtime/Learn/FaceIdentifier.cs" />
-    <Compile Include="Assets/Scripts/Runtime/Input/BasicDrag.cs" />
     <Compile Include="Assets/Scripts/Runtime/Debug/BoundsTester.cs" />
     <Compile Include="Assets/Scripts/Runtime/Learn/LocalTranslation.cs" />
     <Compile Include="Assets/Scripts/Runtime/Input/CubeActions.cs" />

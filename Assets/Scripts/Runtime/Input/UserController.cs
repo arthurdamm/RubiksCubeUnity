@@ -35,24 +35,21 @@ public class UserController : MonoBehaviour
 
     private float _cameraZoomDelta;
 
-    private BasicDrag _drag;
+    private PointerDragTracker _drag;
     
     void Awake()
     {
         // Debug.Log("UserController::Awake()");
-        _cubeController = GetComponent<CubeController>();
-            
-        
         _cubeActions = new ();
         _gameplayMap = _cubeActions.Gameplay;
         _counterClockwiseAction = _gameplayMap.CounterClockwise;
         _lookAction = _gameplayMap.Look;
-        
-        _drag = new BasicDrag(_cubeActions, dragThreshold);
-        
         _pointerAction = _cubeActions.Pointer.Pointer;
         _clickAction = _cubeActions.Pointer.Click;
         _zoomAction = _cubeActions.Pointer.Zoom;
+        
+        _cubeController = GetComponent<CubeController>();
+        _drag = new PointerDragTracker(_pointerAction, _clickAction, dragThreshold, OnDrag);
     }
     
     void Update()
@@ -143,6 +140,11 @@ public class UserController : MonoBehaviour
     private void QueueRotateLayer(CubeNotation layer, float degrees)
     {
         _cubeController.QueueRotateLayer(layer, degrees);
+    }
+
+    private void OnDrag(DragResult drag)
+    {
+        Debug.Log($"UserController::OnDrag() {drag}");
     }
     
     private void OnResetPerformed(InputAction.CallbackContext context)

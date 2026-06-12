@@ -412,10 +412,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: RubiksCube.Runtime::UserControllerGeneral
   mainCamera: {fileID: 1616759287}
   rayLength: 5
-  position: {x: 0, y: 0, z: 0}
   zoomSpeed: 200
   zoomScale: 1
   lookRotationDegreesPerSecond: 360
+  dragThreshold: 20
 --- !u!1 &1616759284
 GameObject:
   m_ObjectHideFlags: 0

@@ -51,6 +51,7 @@
     <Compile Include="Assets/Tests/BasicRotationTests.cs" />
     <Compile Include="Assets/Tests/CubieGridMapperTests.cs" />
     <Compile Include="Assets/Tests/Quaternions/QuaternionTests.cs" />
+    <Compile Include="Assets/Tests/PointerDragTrackerTests.cs" />
     <None Include="Assets/Tests/Tests.asmdef" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/6000.3.8f1/Unity.app/Contents/Resources/Scripting/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -872,6 +873,10 @@
     <ProjectReference Include="RubiksCube.Runtime.csproj">
       <Project>{f326e9ba-95b2-25f3-094d-fd8b57180aa0}</Project>
       <Name>RubiksCube.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.InputSystem.csproj">
+      <Project>{0e37b948-41b1-bc0d-d2de-d910b36d9770}</Project>
+      <Name>Unity.InputSystem</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{8ff2f994-4048-c38a-be36-67ffb810216a}</Project>
