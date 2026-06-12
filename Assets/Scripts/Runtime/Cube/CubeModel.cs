@@ -172,11 +172,18 @@ public class CubeModel
             {
                 for (int z = zStart; z <= zStop; z++)
                 {
-                    Vector3Int point = _cubieGridMapper.LocalPositionToGridIndex(_cubies[x, y, z].localPosition);
-                    // Reset localPosition from integer indices to prevent float drift
-                    _cubies[x, y, z].localPosition = _cubieGridMapper.GridIndexToLocalPosition(point);
-                    // Debug.Log($"copying [{x},{y},{z}] at local: {_cubies[x, y, z].localPosition}, world: {_cubies[x, y, z].position}, TO: [{point.x}, {point.y}, {point.z}]");
-                    cubiesCopy[point.x, point.y, point.z] = _cubies[x, y, z];
+                    Transform cubie = _cubies[x, y, z];
+                    
+                    Vector3Int point = _cubieGridMapper.LocalPositionToGridIndex(cubie.localPosition);
+                    // FIXED: Reset localPosition from integer indices to prevent float drift
+                    cubie.localPosition = _cubieGridMapper.GridIndexToLocalPosition(point);
+                    cubie.localRotation = Quaternion.Euler(
+                        Mathf.Round(cubie.localEulerAngles.x / 90f) * 90f,
+                        Mathf.Round(cubie.localEulerAngles.y / 90f) * 90f,
+                        Mathf.Round(cubie.localEulerAngles.z / 90f) * 90f
+                    );
+                    // Debug.Log($"copying [{x},{y},{z}] at local: {cubie.localPosition}, world: {cubie.position}, TO: [{point.x}, {point.y}, {point.z}]");
+                    cubiesCopy[point.x, point.y, point.z] = cubie;
                 }
             }
         }
