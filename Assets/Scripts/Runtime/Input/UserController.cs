@@ -198,7 +198,7 @@ public class UserController : MonoBehaviour
     {
         // Debug.Log("UserController::OnDestroy()");
         _cubeActions.Dispose();
-        _drag = null;
+        _drag.Dispose();
     }
 
     private void OnZoomPerformed(InputAction.CallbackContext context)

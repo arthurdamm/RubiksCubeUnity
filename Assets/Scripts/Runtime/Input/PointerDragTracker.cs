@@ -30,11 +30,17 @@ public sealed class PointerDragTracker : IDisposable
     
     private Vector2 _startPosition;
 
-    public PointerDragTracker(InputAction pointerPositionAction, InputAction pointerPressAction, float dragThreshold, Action<DragResult> onDrag)
+    public PointerDragTracker(InputAction pointerPositionAction, InputAction pointerPressAction, float dragThreshold,
+        Action<DragResult> onDrag)
     {
-        _pointerPositionAction = pointerPositionAction ?? throw new ArgumentNullException(nameof(pointerPositionAction));
+        _pointerPositionAction =
+            pointerPositionAction ?? throw new ArgumentNullException(nameof(pointerPositionAction));
         _pointerPressAction = pointerPressAction ?? throw new ArgumentNullException(nameof(pointerPressAction));
         _onDrag = onDrag ?? throw new ArgumentNullException(nameof(onDrag));
+        if (dragThreshold < 0f)
+        {
+            throw new ArgumentOutOfRangeException(nameof(dragThreshold));
+        }
         _dragThresholdSquared = dragThreshold * dragThreshold;
         EnableActions();
     }
