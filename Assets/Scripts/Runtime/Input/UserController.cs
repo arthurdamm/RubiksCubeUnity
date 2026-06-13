@@ -35,7 +35,8 @@ public class UserController : MonoBehaviour
 
     private float _cameraZoomDelta;
 
-    private PointerDragTracker _drag;
+    private PointerDragTracker _dragTracker;
+    private CubeRayCaster _rayCaster;
     
     void Awake()
     {
@@ -49,7 +50,8 @@ public class UserController : MonoBehaviour
         _zoomAction = _cubeActions.Pointer.Zoom;
         
         _cubeController = GetComponent<CubeController>();
-        _drag = new PointerDragTracker(_pointerAction, _clickAction, dragThreshold, OnDrag);
+        _dragTracker = new PointerDragTracker(_pointerAction, _clickAction, dragThreshold, OnDrag);
+        _rayCaster = new CubeRayCaster(mainCamera);
     }
     
     void Update()
@@ -145,6 +147,7 @@ public class UserController : MonoBehaviour
     private void OnDrag(DragResult drag)
     {
         Debug.Log($"UserController::OnDrag() {drag}");
+        _rayCaster.CastDrag(drag);
     }
     
     private void OnResetPerformed(InputAction.CallbackContext context)
@@ -198,7 +201,7 @@ public class UserController : MonoBehaviour
     {
         // Debug.Log("UserController::OnDestroy()");
         _cubeActions.Dispose();
-        _drag.Dispose();
+        _dragTracker.Dispose();
     }
 
     private void OnZoomPerformed(InputAction.CallbackContext context)
