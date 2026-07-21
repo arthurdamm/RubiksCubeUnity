@@ -51,7 +51,8 @@ public class UserController : MonoBehaviour
         
         _cubeController = GetComponent<CubeController>();
         _dragTracker = new PointerDragTracker(_pointerAction, _clickAction, dragThreshold, OnDrag);
-        _rayCaster = new CubeRayCaster(mainCamera);
+        CubeBuilder cubeBuilder = GetComponent<CubeBuilder>();
+        _rayCaster = new CubeRayCaster(mainCamera, cubeBuilder);
     }
     
     void Update()

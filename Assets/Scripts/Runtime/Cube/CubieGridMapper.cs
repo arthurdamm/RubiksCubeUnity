@@ -16,6 +16,11 @@ public class CubieGridMapper
             (_cubeLayout.CubieBounds.size.y + _cubeLayout.CubiePadding) * _cubeLayout.CubeSize,
             (_cubeLayout.CubieBounds.size.z + _cubeLayout.CubiePadding) * _cubeLayout.CubeSize);
     }
+
+    public Bounds CubieBounds()
+    {
+        return _cubeLayout.CubieBounds;
+    }
     
     public Vector3 GridIndexToLocalPosition(Vector3Int point)
     {

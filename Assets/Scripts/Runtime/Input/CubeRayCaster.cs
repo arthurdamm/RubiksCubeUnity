@@ -13,14 +13,17 @@ using UnityEngine;
 public class CubeRayCaster
 {
     private Camera _camera;
+    private CubeBuilder _cubeBuilder;
 
-    public CubeRayCaster(Camera camera)
+    public CubeRayCaster(Camera camera, CubeBuilder cubeBuilder)
     {
         _camera = camera;
+        _cubeBuilder = cubeBuilder;
     }
 
     public void CastDrag(DragResult drag)
     {
+        Debug.Log("Builder " + _cubeBuilder);
         RaycastHit startHit, stopHit;
 
         if (!Raycast(drag.Start, out startHit) || !Raycast(drag.Stop, out stopHit))
@@ -28,10 +31,11 @@ public class CubeRayCaster
             Debug.Log("CastDrag() Raycast failed.");
             return;
         }
+
         Debug.DrawRay(startHit.point, (stopHit.point - startHit.point).normalized * 5f, Color.indigo, 60f);
         Debug.DrawRay(startHit.point, startHit.normal * .5f, Color.red, 60f);
         Debug.DrawRay(stopHit.point, stopHit.normal * .5f, Color.red, 60f);
-        
+
         if (!AreSameDirection(startHit.normal, stopHit.normal))
         {
             Debug.Log("CastDrag() normals not same!");
@@ -39,22 +43,38 @@ public class CubeRayCaster
         }
 
         Vector3 projectedDrag = stopHit.point - startHit.point;
-        Debug.DrawLine(startHit.point + startHit.normal * .01f, stopHit.point + stopHit.normal * .01f, Color.black, 60f);
-        
+        Debug.DrawLine(startHit.point + startHit.normal * .01f, stopHit.point + stopHit.normal * .01f, Color.black,
+            60f);
+
         // now need to align projectedDrag with a cardinal direction of the plane in local space
         Vector3 matchingLocalDirection = FindClosestLocalDirectionMatching(projectedDrag, startHit);
-
+        Debug.Log($"Matching Local Direction: {matchingLocalDirection}");
+        var startHitGameObject = startHit.transform.gameObject;
+        var startHitCubieGridIndex = _cubeBuilder.CubieGridMapper.LocalPositionToGridIndex(AdjustHitPointForIndexPosition(startHit));
+        var stopHitCubieGridIndex =
+            _cubeBuilder.CubieGridMapper.LocalPositionToGridIndex(AdjustHitPointForIndexPosition(stopHit));
+        Debug.Log(
+            $"gameObject: {startHitGameObject.name} start: {startHitCubieGridIndex} stop: {stopHitCubieGridIndex}");
     }
 
-    private Vector3 FindClosestLocalDirectionMatching(Vector3 projectedDrag, RaycastHit hit)
+    private Vector3 AdjustHitPointForIndexPosition(RaycastHit hit)
     {
-        Transform hitCubieTransform = hit.transform;
-        Debug.Log($"Hit transform directions: {hitCubieTransform.right}, {hitCubieTransform.up}, {hitCubieTransform.forward}");
-        FindMatchingDirection(projectedDrag, new []{ hitCubieTransform.right, hitCubieTransform.up, hitCubieTransform.forward });
-        var directions = new[] { hitCubieTransform.right, hitCubieTransform.up, hitCubieTransform.forward };
-        FindMatchingDirection(projectedDrag, directions);
+        Vector3 adjustedPoint = hit.point;
 
-        return Vector3.zero;
+        Vector3 adjustment = -hit.normal * (_cubeBuilder.CubieGridMapper.CubieBounds().size.x / 2f);
+        adjustedPoint += adjustment;
+        Debug.Log($"hitPoint: {hit.point} Adjusted: {adjustedPoint} N: {hit.normal} A: {adjustment} X: {_cubeBuilder.CubieGridMapper.CubieBounds().size.x / 2f} X: {_cubeBuilder.CubieGridMapper.CubieBounds().size.x}");
+        adjustedPoint = hit.transform.gameObject.transform.InverseTransformPoint(adjustedPoint);
+        Debug.Log($"Mapped to Local: {adjustedPoint}");
+        return adjustedPoint;
+    }
+
+private Vector3 FindClosestLocalDirectionMatching(Vector3 projectedDrag, RaycastHit hit)
+    {
+        Transform hitCubieTransform = hit.transform.gameObject.transform;
+        Debug.Log($"Hit transform directions: {hitCubieTransform.right}, {hitCubieTransform.up}, {hitCubieTransform.forward}");
+        var directions = new[] { hitCubieTransform.right, hitCubieTransform.up, hitCubieTransform.forward };
+        return FindMatchingDirection(projectedDrag, directions);
     }
 
     private bool AreSameDirection(Vector3 a, Vector3 b)
