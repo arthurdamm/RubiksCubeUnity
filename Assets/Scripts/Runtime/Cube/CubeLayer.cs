@@ -43,6 +43,8 @@ public readonly struct CubeLayer
     
     // The index of this layer's axis in a cube[x,y,z] grid
     public int Index { get; init; }
+
+    public override string ToString() => $"CubeLayer(Axis={Axis}, Index={Index})";
 }
 
 public readonly struct CubeLayerRotation
@@ -55,6 +57,8 @@ public readonly struct CubeLayerRotation
     
     public CubeLayer Layer { get; init; }
     public float Degrees { get; init; }
+
+    public override string ToString() => $"CubeLayerRotation(Layer={Layer}, Degrees={Degrees})";
 }
 
 public readonly struct CubeLayout
@@ -69,4 +73,6 @@ public readonly struct CubeLayout
     public int CubeSize { get; init; }
     public float CubiePadding { get; init; }
     public Bounds CubieBounds { get; init; }
+    
+    public override string ToString() => $"CubeLayout(CubeSize={CubeSize}, CubiePadding={CubiePadding} CubieBounds={CubieBounds})";
 }
