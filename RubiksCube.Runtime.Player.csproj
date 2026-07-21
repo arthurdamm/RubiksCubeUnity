@@ -50,6 +50,7 @@
     <Compile Include="Assets/Scripts/Runtime/Debug/LookAt.cs" />
     <Compile Include="Assets/Scripts/Runtime/Input/UserController.cs" />
     <Compile Include="Assets/Scripts/Runtime/Debug/ScreenRay.cs" />
+    <Compile Include="Assets/Scripts/Runtime/Cube/CompilerServicesFix.cs" />
     <Compile Include="Assets/Scripts/Runtime/Library/Rotations.cs" />
     <Compile Include="Assets/Scripts/Runtime/Learn/CubeRotationFromManual.cs" />
     <Compile Include="Assets/Scripts/Runtime/Input/PointerDragTracker.cs" />
