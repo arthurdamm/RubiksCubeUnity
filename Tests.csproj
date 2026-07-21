@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="Assets/Tests/LayerTests.cs" />
     <Compile Include="Assets/Tests/BasicRotationTests.cs" />
-    <Compile Include="Assets/Tests/RayCasterTests.cs" />
+    <Compile Include="Assets/Tests/FindMatchingDirectionTests.cs" />
     <Compile Include="Assets/Tests/CubeDirectionsResolverTests.cs" />
     <Compile Include="Assets/Tests/CubieGridMapperTests.cs" />
     <Compile Include="Assets/Tests/Quaternions/QuaternionTests.cs" />

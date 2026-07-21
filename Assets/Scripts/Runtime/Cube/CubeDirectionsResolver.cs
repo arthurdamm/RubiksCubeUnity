@@ -1,14 +1,19 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CubeDirectionsResolver
 {
     private readonly Transform _cubeTransform;
-    
-    // public CubeDirectionsResolver()
+
+    public CubeDirectionsResolver(Transform cubeTransform)
+    {
+        _cubeTransform = cubeTransform;
+    }
 
     public CubeDirection QuantizeAxialDirection(Vector3 axialDirection)
     {
+        Debug.Log($"QuantizeAxialDirection() {axialDirection}");
         if (axialDirection.sqrMagnitude < .9f)
         {
             throw new ArgumentException("Direction is too small.", nameof(axialDirection));
@@ -29,9 +34,31 @@ public class CubeDirectionsResolver
         return new CubeDirection(CubeAxis.Z, axialDirection.z > 0f ? 1 : -1);
     }
 
+    public CubeDirection QuantizeWorldToAxialDirection(Vector3 worldDirection)
+    {
+        Debug.Log($"QuantizeWorldToAxialDirection() {worldDirection}");
+        return QuantizeAxialDirection(_cubeTransform.InverseTransformDirection(worldDirection));
+    }
 
-
-
-
-
+    // public CubeDirection MatchProjectedDragAgainstPlaneAxes(Vector3 projectedDrag, CubeDirection normal)
+    // {
+    //     
+    // }
+    
+    internal Vector3 FindMatchingDirection(Vector3 direction, IReadOnlyList<Vector3> candidates)
+    {
+        float maxDotProduct = Single.MinValue;
+        Vector3 matchingDirection = Vector3.zero;
+        foreach (var candidate in candidates)
+        {
+            float dotProduct = Vector3.Dot(candidate, direction);
+            float absDotProduct = Mathf.Abs(dotProduct);
+            if (absDotProduct > maxDotProduct)
+            {
+                maxDotProduct = absDotProduct;
+                matchingDirection = candidate * Mathf.Sign(dotProduct);
+            }
+        }
+        return matchingDirection;
+    }
 }

@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 /*
@@ -47,14 +46,19 @@ public class CubeRayCaster
             60f);
 
         // now need to align projectedDrag with a cardinal direction of the plane in local space
-        Vector3 matchingLocalDirection = FindClosestLocalDirectionMatching(projectedDrag, startHit);
-        Debug.Log($"Matching Local Direction: {matchingLocalDirection}");
+        // Vector3 matchingLocalDirection = FindClosestLocalDirectionMatching(projectedDrag, startHit);
+        // Debug.Log($"Matching Local Direction: {matchingLocalDirection}");
         var startHitGameObject = startHit.transform.gameObject;
         var startHitCubieGridIndex = _cubeBuilder.CubieGridMapper.LocalPositionToGridIndex(AdjustHitPointForIndexPosition(startHit));
         var stopHitCubieGridIndex =
             _cubeBuilder.CubieGridMapper.LocalPositionToGridIndex(AdjustHitPointForIndexPosition(stopHit));
         Debug.Log(
             $"gameObject: {startHitGameObject.name} start: {startHitCubieGridIndex} stop: {stopHitCubieGridIndex}");
+
+        var directionsResolver = new CubeDirectionsResolver(startHitGameObject.transform);
+        
+        var quantizedNormal = directionsResolver.QuantizeWorldToAxialDirection(startHit.normal);
+        
     }
 
     private Vector3 AdjustHitPointForIndexPosition(RaycastHit hit)
@@ -69,35 +73,35 @@ public class CubeRayCaster
         return adjustedPoint;
     }
 
-private Vector3 FindClosestLocalDirectionMatching(Vector3 projectedDrag, RaycastHit hit)
-    {
-        Transform hitCubieTransform = hit.transform.gameObject.transform;
-        Debug.Log($"Hit transform directions: {hitCubieTransform.right}, {hitCubieTransform.up}, {hitCubieTransform.forward}");
-        var directions = new[] { hitCubieTransform.right, hitCubieTransform.up, hitCubieTransform.forward };
-        return FindMatchingDirection(projectedDrag, directions);
-    }
+// private Vector3 FindClosestLocalDirectionMatching(Vector3 projectedDrag, RaycastHit hit)
+//     {
+//         Transform hitCubieTransform = hit.transform.gameObject.transform;
+//         Debug.Log($"Hit transform directions: {hitCubieTransform.right}, {hitCubieTransform.up}, {hitCubieTransform.forward}");
+//         var directions = new[] { hitCubieTransform.right, hitCubieTransform.up, hitCubieTransform.forward };
+//         return FindMatchingDirection(projectedDrag, directions);
+//     }
 
     private bool AreSameDirection(Vector3 a, Vector3 b)
     {
         return Vector3.Dot(a, b) > .999f;
     }
 
-    internal Vector3 FindMatchingDirection(Vector3 direction, IReadOnlyList<Vector3> candidates)
-    {
-        float maxDotProduct = Single.MinValue;
-        Vector3 matchingDirection = Vector3.zero;
-        foreach (var candidate in candidates)
-        {
-            float dotProduct = Vector3.Dot(candidate, direction);
-            float absDotProduct = Mathf.Abs(dotProduct);
-            if (absDotProduct > maxDotProduct)
-            {
-                maxDotProduct = absDotProduct;
-                matchingDirection = candidate * Mathf.Sign(dotProduct);
-            }
-        }
-        return matchingDirection;
-    }
+    // internal Vector3 FindMatchingDirection(Vector3 direction, IReadOnlyList<Vector3> candidates)
+    // {
+    //     float maxDotProduct = Single.MinValue;
+    //     Vector3 matchingDirection = Vector3.zero;
+    //     foreach (var candidate in candidates)
+    //     {
+    //         float dotProduct = Vector3.Dot(candidate, direction);
+    //         float absDotProduct = Mathf.Abs(dotProduct);
+    //         if (absDotProduct > maxDotProduct)
+    //         {
+    //             maxDotProduct = absDotProduct;
+    //             matchingDirection = candidate * Mathf.Sign(dotProduct);
+    //         }
+    //     }
+    //     return matchingDirection;
+    // }
 
     private bool Raycast(Vector2 screenPoint, out RaycastHit hit)
     {

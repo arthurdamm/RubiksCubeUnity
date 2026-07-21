@@ -2,7 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools.Utils;
 
-public class RayCasterTests
+public class FindMatchingDirectionTests
 {
     [Test]
     public void TestMatchingDirections_FindsPositive()
@@ -11,12 +11,12 @@ public class RayCasterTests
         GameObject go = new GameObject();
         go.AddComponent<CubeBuilder>();
         CubeBuilder cubeBuilder = go.GetComponent<CubeBuilder>();
-        CubeRayCaster cubeRayCaster = new CubeRayCaster(camera, cubeBuilder);
+        var directionsResolver = new CubeDirectionsResolver(go.transform);
         var comparer = new Vector3EqualityComparer(10e-6f);
         
         Vector3[] candidates = new[] { Vector3.forward, Vector3.up, Vector3.right };
         var expected = Vector3.up;
-        var actual = cubeRayCaster.FindMatchingDirection(expected, candidates);
+        var actual = directionsResolver.FindMatchingDirection(expected, candidates);
         
         Assert.That(actual, Is.EqualTo(expected).Using(comparer));
     }
@@ -28,12 +28,12 @@ public class RayCasterTests
         GameObject go = new GameObject();
         go.AddComponent<CubeBuilder>();
         CubeBuilder cubeBuilder = go.GetComponent<CubeBuilder>();
-        CubeRayCaster cubeRayCaster = new CubeRayCaster(camera, cubeBuilder);
+        var directionsResolver = new CubeDirectionsResolver(go.transform);
         var comparer = new Vector3EqualityComparer(10e-6f);
         
         Vector3[] candidates = new[] { Vector3.forward, Vector3.up, Vector3.right };
         var expected = -Vector3.up;
-        var actual = cubeRayCaster.FindMatchingDirection(expected, candidates);
+        var actual = directionsResolver.FindMatchingDirection(expected, candidates);
         
         Assert.That(actual, Is.EqualTo(expected).Using(comparer));
     }
@@ -45,12 +45,12 @@ public class RayCasterTests
         GameObject go = new GameObject();
         go.AddComponent<CubeBuilder>();
         CubeBuilder cubeBuilder = go.GetComponent<CubeBuilder>();
-        CubeRayCaster cubeRayCaster = new CubeRayCaster(camera, cubeBuilder);
+        var directionsResolver = new CubeDirectionsResolver(go.transform);
         var comparer = new Vector3EqualityComparer(10e-6f);
         
         Vector3[] candidates = new[] { Vector3.forward, Vector3.up, Vector3.right };
         var expected = -Vector3.up;
-        var actual = cubeRayCaster.FindMatchingDirection(new Vector3(0.1f, -.9f, 0.1f), candidates);
+        var actual = directionsResolver.FindMatchingDirection(new Vector3(0.1f, -.9f, 0.1f), candidates);
         
         Assert.That(actual, Is.EqualTo(expected).Using(comparer));
     }
