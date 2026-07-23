@@ -38,5 +38,10 @@ public class CubeController : MonoBehaviour
     {
         _cubeModel.QueueRotateLayer(_cubeBuilder.CubieGridMapper.CubeNotationToCubeLayer(layer), degrees);
     }
+
+    public void QueueRotateLayer(CubeLayerRotation rotation)
+    {
+        _cubeModel.QueueRotateLayer(rotation.Layer, rotation.Degrees);
+    }
 }
 

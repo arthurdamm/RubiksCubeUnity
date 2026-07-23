@@ -1,14 +1,5 @@
-
 using UnityEngine;
 
-/*
- * CubeRayCaster
- * Takes DragResult and ray casts its onto the Cube
- * 1. Project drag onto cubie face
- * 2. Compare project vector to cubie cardinal dirs on that face
- * 3. draw resultant direction 
- * 
- */
 public class CubeRayCaster
 {
     private Camera _camera;
@@ -20,34 +11,20 @@ public class CubeRayCaster
         _cubeBuilder = cubeBuilder;
     }
 
-    public void CastDrag(DragResult drag)
+    public CubeLayerRotation? CastDrag(DragResult drag)
     {
-        Debug.Log("Builder " + _cubeBuilder);
-        RaycastHit startHit, stopHit;
-
-        if (!Raycast(drag.Start, out startHit) || !Raycast(drag.Stop, out stopHit))
+        if (!Raycast(drag.Start, out RaycastHit startHit) || !Raycast(drag.Stop, out RaycastHit stopHit))
         {
             Debug.Log("CastDrag() Raycast failed.");
-            return;
+            return null;
         }
-
-        Debug.DrawRay(startHit.point, (stopHit.point - startHit.point).normalized * 5f, Color.indigo, 60f);
-        Debug.DrawRay(startHit.point, startHit.normal * .5f, Color.red, 60f);
-        Debug.DrawRay(stopHit.point, stopHit.normal * .5f, Color.red, 60f);
-
         if (!AreSameDirection(startHit.normal, stopHit.normal))
         {
             Debug.Log("CastDrag() normals not same!");
-            return;
+            return null;
         }
-
+        DrawDragVectors(startHit, stopHit);
         Vector3 projectedDrag = stopHit.point - startHit.point;
-        Debug.DrawLine(startHit.point + startHit.normal * .01f, stopHit.point + stopHit.normal * .01f, Color.black,
-            60f);
-
-        // now need to align projectedDrag with a cardinal direction of the plane in local space
-        // Vector3 matchingLocalDirection = FindClosestLocalDirectionMatching(projectedDrag, startHit);
-        // Debug.Log($"Matching Local Direction: {matchingLocalDirection}");
         var startHitGameObject = startHit.transform.gameObject;
         var startHitCubieGridIndex = _cubeBuilder.CubieGridMapper.LocalPositionToGridIndex(AdjustHitPointForIndexPosition(startHit));
         var stopHitCubieGridIndex =
@@ -58,8 +35,25 @@ public class CubeRayCaster
         var directionsResolver = new CubeDirectionsResolver(startHitGameObject.transform);
         var quantizedNormal = directionsResolver.QuantizeWorldToAxialDirection(startHit.normal);
         var dragMatchedAxis = directionsResolver.MatchProjectedDragAgainstPlaneAxes(projectedDrag, quantizedNormal);
-        // var selectedLayerAxis = 
+        var selectedLayerAxis = directionsResolver.GetRemainingAxis(quantizedNormal.Axis, dragMatchedAxis.Axis);
+        
+        var crossRotation = Vector3.Cross(dragMatchedAxis.Vector, -quantizedNormal.Vector);
+        var quantizedCrossRotation = directionsResolver.QuantizeAxialDirection(crossRotation);
+        // if (directionsResolver.QuantizeAxialDirection(crossRotation) == 
+        
+        
+        Logger.LogFields(new { quantizedNormal, dragMatchedAxis, selectedLayerAxis, crossRotation, quantizedCrossRotation});
+        return new CubeLayerRotation(new CubeLayer(selectedLayerAxis, startHitCubieGridIndex[(int)selectedLayerAxis]), 90f * quantizedCrossRotation.Sign);
+    }
 
+    private static void DrawDragVectors(RaycastHit startHit, RaycastHit stopHit)
+    {
+        Debug.DrawRay(startHit.point, (stopHit.point - startHit.point).normalized * 5f, Color.indigo, 60f);
+        Debug.DrawRay(startHit.point, startHit.normal * .5f, Color.red, 60f);
+        Debug.DrawRay(stopHit.point, stopHit.normal * .5f, Color.red, 60f);
+        
+        Debug.DrawLine(startHit.point + startHit.normal * .01f, stopHit.point + stopHit.normal * .01f, Color.black,
+            60f);
     }
 
     private Vector3 AdjustHitPointForIndexPosition(RaycastHit hit)

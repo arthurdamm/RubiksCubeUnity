@@ -121,34 +121,27 @@ public class UserController : MonoBehaviour
         mainCamera.transform.Translate(Vector3.forward * zoomAmount, Space.Self);
         // Debug.Log($"Translate {zoomAmount}");
         _cameraZoomDelta -= zoomAmount;
-
     }
 
-    private void CastRay(Vector3 pointerPosition)
-    {
-        Debug.Log($"CastRay({pointerPosition})");
-        Ray ray = mainCamera.ScreenPointToRay(pointerPosition);
-
-        if (!Physics.Raycast(ray, out RaycastHit hit))
-        {
-            Debug.Log("NO HIT!");
-            return;
-        }
-        Debug.Log($"HIT: {hit}");
-        
-        Debug.DrawLine(hit.point, hit.point + hit.normal * rayLength, Color.darkBlue, 5f);
-        
-    }
-    
     private void QueueRotateLayer(CubeNotation layer, float degrees)
     {
         _cubeController.QueueRotateLayer(layer, degrees);
+    }
+    
+    private void QueueRotateLayer(CubeLayerRotation rotation)
+    {
+        Debug.Log("UserController::QueueRotationLayer() " + rotation);
+        _cubeController.QueueRotateLayer(rotation);
     }
 
     private void OnDrag(DragResult drag)
     {
         Debug.Log($"UserController::OnDrag() {drag}");
-        _rayCaster.CastDrag(drag);
+        CubeLayerRotation? resolvedRotation = _rayCaster.CastDrag(drag);
+        if (resolvedRotation != null)
+        {
+            QueueRotateLayer((CubeLayerRotation)resolvedRotation);
+        }
     }
     
     private void OnResetPerformed(InputAction.CallbackContext context)

@@ -69,8 +69,8 @@ public class SixCubeDirectionsBasic
         var go = new GameObject();
         CubeDirectionsResolver cubeDirections = new(go.transform);
 
-        var actual = cubeDirections.QuantizeAxialDirection(Vector3.forward);
-        var expected = new CubeDirection(CubeAxis.Z, 1);
+        var actual = cubeDirections.QuantizeAxialDirection(-Vector3.forward);
+        var expected = new CubeDirection(CubeAxis.Z, -1);
         Assert.That(actual, Is.EqualTo(expected));
     }
 }
