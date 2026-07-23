@@ -47,13 +47,14 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.3.8f1/Unity.app/Contents/Resources/BuildPipeline/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Tests/CubeDirectionsResolver/FindMatchingDirections.cs" />
     <Compile Include="Assets/Tests/LayerTests.cs" />
     <Compile Include="Assets/Tests/BasicRotationTests.cs" />
-    <Compile Include="Assets/Tests/CubeDirectionsResolverTests.cs" />
     <Compile Include="Assets/Tests/CubieGridMapperTests.cs" />
     <Compile Include="Assets/Tests/CubeDirectionsResolver/SixCubeDirectionsBasic.cs" />
     <Compile Include="Assets/Tests/Quaternions/QuaternionTests.cs" />
     <Compile Include="Assets/Tests/PointerDragTrackerTests.cs" />
+    <Compile Include="Assets/Tests/CubeDirectionsResolver/GetRemainingAxes.cs" />
     <None Include="Assets/Tests/Tests.asmdef" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/6000.3.8f1/Unity.app/Contents/Resources/Scripting/Managed/UnityEngine/UnityEngine.dll</HintPath>
