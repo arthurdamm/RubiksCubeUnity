@@ -56,9 +56,10 @@ public class CubeRayCaster
             $"gameObject: {startHitGameObject.name} start: {startHitCubieGridIndex} stop: {stopHitCubieGridIndex}");
 
         var directionsResolver = new CubeDirectionsResolver(startHitGameObject.transform);
-        
         var quantizedNormal = directionsResolver.QuantizeWorldToAxialDirection(startHit.normal);
-        
+        var dragMatchedAxis = directionsResolver.MatchProjectedDragAgainstPlaneAxes(projectedDrag, quantizedNormal);
+        // var selectedLayerAxis = 
+
     }
 
     private Vector3 AdjustHitPointForIndexPosition(RaycastHit hit)
