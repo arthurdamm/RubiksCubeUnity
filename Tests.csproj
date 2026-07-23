@@ -51,6 +51,7 @@
     <Compile Include="Assets/Tests/BasicRotationTests.cs" />
     <Compile Include="Assets/Tests/CubeDirectionsResolverTests.cs" />
     <Compile Include="Assets/Tests/CubieGridMapperTests.cs" />
+    <Compile Include="Assets/Tests/CubeDirectionsResolver/SixCubeDirectionsBasic.cs" />
     <Compile Include="Assets/Tests/Quaternions/QuaternionTests.cs" />
     <Compile Include="Assets/Tests/PointerDragTrackerTests.cs" />
     <None Include="Assets/Tests/Tests.asmdef" />
@@ -887,9 +888,6 @@
       <Project>{82f7be41-2f82-dc0a-8248-5e7c7cbd55d4}</Project>
       <Name>UnityEngine.UI</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\Tests\CubeDirectionsResolver\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

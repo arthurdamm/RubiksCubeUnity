@@ -2,8 +2,6 @@ using NUnit.Framework;
 using UnityEngine.TestTools.Utils;
 using UnityEngine;
 
-namespace Tests
-{
 public class CubeDirectionsResolverTests
 {
     [Test]
@@ -131,6 +129,4 @@ public class FindMatchingDirectionTests
     }
 }
 
-
-}
 
