@@ -49,7 +49,7 @@ public class CubeDirectionsResolver
             CubeAxis.Z => new[] { Vector3.right, Vector3.up },
             _ => throw new ArgumentOutOfRangeException()
         };
-        var matchingAxialDirection = FindMatchingDirection(projectedDrag, candidates);
+        var matchingAxialDirection = FindMatchingDirection(_cubeTransform.InverseTransformDirection(projectedDrag), candidates);
         Debug.Log($"MatchProjectedDragAgainstPlaneAxes() matchingAxialDirection: {matchingAxialDirection}");
         return QuantizeAxialDirection(matchingAxialDirection);
     }
