@@ -64,6 +64,7 @@ public sealed class PointerDragTracker : IDisposable
 
     private void OnPressStarted(InputAction.CallbackContext context)
     {
+        Debug.Log($"OnPress() {_pointerPositionAction.ReadValue<Vector2>()}");
         BeginDrag(_pointerPositionAction.ReadValue<Vector2>());
     }
 
