@@ -102,6 +102,7 @@ public class UserController : MonoBehaviour
     {
         if (_lookAction.IsPressed())
         {
+            Debug.Log("Look IsPressed");
             var inputValue = _lookAction.ReadValue<Vector2>();
             transform.Rotate(Vector3.up, inputValue.x * lookRotationDegreesPerSecond * Time.deltaTime, Space.World);
             transform.Rotate(Vector3.right, inputValue.y * lookRotationDegreesPerSecond * Time.deltaTime, Space.World);

@@ -309,6 +309,7 @@ GameObject:
   - component: {fileID: 1515947560}
   - component: {fileID: 1515947561}
   - component: {fileID: 1515947562}
+  - component: {fileID: 1515947563}
   m_Layer: 0
   m_Name: CubeController
   m_TagString: Untagged
@@ -416,6 +417,18 @@ MonoBehaviour:
   zoomScale: 1
   lookRotationDegreesPerSecond: 360
   dragThreshold: 20
+--- !u!114 &1515947563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515947554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e02bc7fca11496b88d363638a05aa46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RubiksCube.Runtime::EnhancedTouchDebug
 --- !u!1 &1616759284
 GameObject:
   m_ObjectHideFlags: 0
